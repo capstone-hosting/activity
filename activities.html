@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vigenture</title>
+    <!-- font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Fira+Code:wght@300..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Mulish:ital,wght@0,200..1000;1,200..1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Public+Sans:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap" rel="stylesheet">
+    <!-- tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- css -->
+    <link href="../src/style/output.css" rel="stylesheet">
+
+    <!-- breakpoints -->
+    <script>
+    tailwind.config = {
+    theme: {
+    extend: {
+      screens: {
+        'sm': '300px',  // (phones)
+        'md': '768px',  // (tablets)
+        'lg': '1025px', // (laptops/desktops)
+        'xl': '1280px', // Extra large devices
+        '2xl': '1536px' // Extra extra large screens
+                },
+            },
+        },
+    }
+    </script>
+
+
+    <!-- map api -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""/>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""></script>
+
+
+    <style>
+    .arrowDown {
+        transition: transform 0.3s ease;
+    }
+
+    .rotate-180 {
+        transform: rotate(180deg);
+    }
+    </style>
+
+
+
+
+</head>
+<body style="font-family: 'DM Sans', sans-serif;" class="bg-white text-[#101010] scroll-smooth">
+
+
+    <!-- HEADER -->
+    <header class=" fixed top-0 w-full z-20 bg-white">
+        <div class="flex justify-between items-center px-10 py-3 relative duration-300 ease-in-out 2xl:w-[65%] m-auto">
+            <div class="flex items-center">
+                <img src="logo.png" alt="logo" class="w-10">
+                <h1 class="text-[20px] md:text-[24px] font-medium cursor-pointer">Vigenture</h1>
+            </div>
+
+            <NAV class="hidden md:flex absolute left-1/2 transform -translate-x-1/2 text-sm font-semibold">
+                <ul class="flex space-x-4">
+                    <li onclick="scrollToTop()" class="hover:text-[#2986FE] duration-200 ease-in-out cursor-pointer px-2 py-1 w-20 text-center font-normal rounded-xl">Home</li>
+  
+                    <!-- Explore NAV -->
+                    <li class="relative">
+                        <button class="cursor-pointer flex items-center justify-center hover:text-[#2986FE] px-2 py-1 rounded-xl font-normal duration-200 ease-linear w-20 text-center" onclick="toggleDropdown('exploreDropdown', event)">Explore <span>
+                            <svg class="arrowDown" xmlns="http://www.w3.org/2000/svg" width="16" height="7" viewBox="0 0 16 7">
+                            <path fill="currentColor" d="M8 6.5a.47.47 0 0 1-.35-.15l-4.5-4.5c-.2-.2-.2-.51 0-.71s.51-.2.71 0l4.15 4.15l4.14-4.14c.2-.2.51-.2.71 0s.2.51 0 .71l-4.5 4.5c-.1.1-.23.15-.35.15Z" />
+                        </svg></span></button>
+                        <ul id="exploreDropdown" class="hidden absolute bg-[#F9F9FB] shadow-xl rounded-lg w-max top-[35px]">
+                            <li class="hover:bg-[#E4E7EC] duration-200 ease-linear px-4 py-2 hover:rounded-t-lg font-normal"><a href="attractions.html">Attractions</a></li>
+                            <li class="hover:bg-[#E4E7EC] duration-200 ease-linear px-4 py-2 font-normal"><a href="activities.html">Activities</a></li>
+                            <li class="hover:bg-[#E4E7EC] duration-200 ease-linear px-4 py-2 hover:rounded-b-lg font-normal"><a href="localfoods.html">Local Foods</a></li>
+                        </ul>
+                    </li>
+  
+                    <!-- Trips NAV -->
+                    <li class="relative group">
+                        <button class="cursor-pointer flex items-center justify-center hover:text-[#2986FE] px-2 font-normal py-1 rounded-xl duration-200 ease-linear w-20 text-center" onclick="toggleDropdown('tripsDropdown', event)">Trips <span><svg class="arrowDown" xmlns="http://www.w3.org/2000/svg" width="16" height="7" viewBox="0 0 16 7">
+                            <path fill="currentColor" d="M8 6.5a.47.47 0 0 1-.35-.15l-4.5-4.5c-.2-.2-.2-.51 0-.71s.51-.2.71 0l4.15 4.15l4.14-4.14c.2-.2.51-.2.71 0s.2.51 0 .71l-4.5 4.5c-.1.1-.23.15-.35.15Z" />
+                        </svg></span></button>
+                        <ul id="tripsDropdown" class="hidden absolute bg-[#F9F9FB] shadow-xl rounded-lg w-max top-[35px]">
+                            <li class="hover:bg-[#E4E7EC] duration-200 ease-linear px-4 py-2 hover:rounded-t-lg font-normal"><a href="#">View my trips</a></li>
+                            <li class="hover:bg-[#E4E7EC] duration-200 ease-linear px-4 py-2 font-normal"><a href="#">Create your own itinerary</a></li>
+                            <li class="hover:bg-[#E4E7EC] duration-200 ease-linear px-4 py-2 hover:rounded-b-lg font-normal"><a href="#">Create itinerary with us</a></li>
+                        </ul>
+                    </li>
+  
+                    <!-- Services NAV -->
+                    <li class="relative">
+                        <button class="cursor-pointer flex items-center justify-center hover:text-[#2986FE] px-2 py-1 font-normal rounded-xl duration-200 ease-linear w-20 text-center" onclick="toggleDropdown('servicesDropdown', event)">Services <span><svg class="arrowDown" xmlns="http://www.w3.org/2000/svg" width="16" height="7" viewBox="0 0 16 7">
+                            <path fill="currentColor" d="M8 6.5a.47.47 0 0 1-.35-.15l-4.5-4.5c-.2-.2-.2-.51 0-.71s.51-.2.71 0l4.15 4.15l4.14-4.14c.2-.2.51-.2.71 0s.2.51 0 .71l-4.5 4.5c-.1.1-.23.15-.35.15Z" />
+                        </svg></span></button>
+                        <ul id="servicesDropdown" class="hidden absolute bg-[#F9F9FB] shadow-xl rounded-lg w-max top-[35px]">
+                            <li class="hover:bg-[#E4E7EC] duration-200 ease-linear px-4 py-2 hover:rounded-t-lg font-normal"><a href="#">View my bookings</a></li>
+                            <li class="hover:bg-[#E4E7EC] duration-200 ease-linear px-4 py-2 hover:rounded-b-lg font-normal"><a href="#">Car rental</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </NAV>
+  
+<!-- LOGIN -->
+<div class="hidden md:flex items-center space-x-3 text-sm font-semibold justify-center cursor-pointer">
+    <input type="search" placeholder="Search..." class="md:hidden lg:block border p-1 outline-none focus:outline-none focus:ring-2 focus:ring-[#2986FE] duration-300 ease-in-out rounded-md font-normal">
+
+    <ul>
+        <li class="relative">
+            <div class="flex justify-evenly items-center">
+                <button id="nameDropdownBtn" class="font-normal cursor-pointer rounded-[99px] duration-200 ease-linear px-2 py-0.5 flex items-center" onclick="toggleDropdownName('nameDropdown', event)">John
+                    <span class="text-[10px]">                            <svg class="arrowDown" xmlns="http://www.w3.org/2000/svg" width="16" height="7" viewBox="0 0 16 7">
+                        <path fill="currentColor" d="M8 6.5a.47.47 0 0 1-.35-.15l-4.5-4.5c-.2-.2-.2-.51 0-.71s.51-.2.71 0l4.15 4.15l4.14-4.14c.2-.2.51-.2.71 0s.2.51 0 .71l-4.5 4.5c-.1.1-.23.15-.35.15Z" />
+                    </svg></span>
+                </button>
+            </div>
+
+            <ul id="nameDropdown" class="hidden absolute bg-white shadow-xl rounded-lg w-[200px] left-[-101px] top-[30px]">
+                <div class="mb-4">
+                    <img src="defaultPFP.png" alt="defaultPFP" class="w-[55px] rounded-[99px] m-auto mb-3 mt-3">
+                    <h1 class="font-medium text-center">John Doe</h1>
+                </div>
+                <div class="flex font-normal h-fit items-center px-2 py-0.5 hover:bg-[#E4E7EC] duration-200 ease-linear">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 27 27" >
+                        <path fill="#0e1111" d="M13 0C5.925 0 0 5.08 0 11.5c0 3.03 1.359 5.748 3.5 7.781a6.7 6.7 0 0 1-1.094 1.875A16.5 16.5 0 0 1 .375 23.22A1 1 0 0 0 1 25c2.215 0 3.808-.025 5.25-.406c1.29-.342 2.399-1.058 3.531-2.063c1.03.247 2.093.469 3.219.469c7.075 0 13-5.08 13-11.5S20.075 0 13 0m0 2c6.125 0 11 4.32 11 9.5S19.125 21 13 21c-1.089 0-2.22-.188-3.25-.469a1 1 0 0 0-.938.25c-1.125 1.079-1.954 1.582-3.062 1.875c-.51.135-1.494.103-2.188.157c.14-.158.271-.242.407-.407c.786-.96 1.503-1.975 1.719-3.125a1 1 0 0 0-.344-.937C3.249 16.614 2 14.189 2 11.5C2 6.32 6.875 2 13 2m-1.906 3.906a1 1 0 0 0-.469.25l-1.5 1.407l1.344 1.468l1.187-1.125h2.406L15 8.97v1.469l-2.563 1.718A1 1 0 0 0 12 13v2h2v-1.438l2.563-1.718A1 1 0 0 0 17 11V8.594a1 1 0 0 0-.25-.656l-1.5-1.688a1 1 0 0 0-.75-.344h-3.188a1 1 0 0 0-.218 0M12 16v2h2v-2z" />
+                    </svg>
+                    <li class="px-4 py-2"><a href="#">How it works</a></li>
+                </div>
+                <div class="flex font-normal h-fit items-center px-2 py-0.5 hover:bg-[#E4E7EC] duration-200 ease-linear">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 32 32">
+                        <path fill="#0e1111" d="M27 16.76v-1.53l1.92-1.68A2 2 0 0 0 29.3 11l-2.36-4a2 2 0 0 0-1.73-1a2 2 0 0 0-.64.1l-2.43.82a11 11 0 0 0-1.31-.75l-.51-2.52a2 2 0 0 0-2-1.61h-4.68a2 2 0 0 0-2 1.61l-.51 2.52a11.5 11.5 0 0 0-1.32.75l-2.38-.86A2 2 0 0 0 6.79 6a2 2 0 0 0-1.73 1L2.7 11a2 2 0 0 0 .41 2.51L5 15.24v1.53l-1.89 1.68A2 2 0 0 0 2.7 21l2.36 4a2 2 0 0 0 1.73 1a2 2 0 0 0 .64-.1l2.43-.82a11 11 0 0 0 1.31.75l.51 2.52a2 2 0 0 0 2 1.61h4.72a2 2 0 0 0 2-1.61l.51-2.52a11.5 11.5 0 0 0 1.32-.75l2.42.82a2 2 0 0 0 .64.1a2 2 0 0 0 1.73-1l2.28-4a2 2 0 0 0-.41-2.51ZM25.21 24l-3.43-1.16a8.9 8.9 0 0 1-2.71 1.57L18.36 28h-4.72l-.71-3.55a9.4 9.4 0 0 1-2.7-1.57L6.79 24l-2.36-4l2.72-2.4a8.9 8.9 0 0 1 0-3.13L4.43 12l2.36-4l3.43 1.16a8.9 8.9 0 0 1 2.71-1.57L13.64 4h4.72l.71 3.55a9.4 9.4 0 0 1 2.7 1.57L25.21 8l2.36 4l-2.72 2.4a8.9 8.9 0 0 1 0 3.13L27.57 20Z" />
+                        <path fill="#0e1111" d="M16 22a6 6 0 1 1 6-6a5.94 5.94 0 0 1-6 6m0-10a3.91 3.91 0 0 0-4 4a3.91 3.91 0 0 0 4 4a3.91 3.91 0 0 0 4-4a3.91 3.91 0 0 0-4-4" />
+                    </svg>
+                    <li class="px-4 py-2"><a href="#">Settings</a></li>
+                </div>
+                <div class="flex font-normal h-fit items-center px-2 py-0.5 text-[#C0000A] hover:bg-red-500 duration-200 ease-linear">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24">
+                        <g fill="none" stroke="#C0000A" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                            <path d="M14 8V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2v-2" />
+                            <path d="M9 12h12l-3-3m0 6l3-3" />
+                        </g>
+                    </svg>
+                    <li class="px-4 py-2"><a href="#">Log out</a></li>
+                </div>
+            </ul>
+        </li>
+    </ul>
+</div>
+  
+            <!-- Mobile Menu Button(Para Sidebar) -->
+            <button class="md:hidden text-2xl hover:text-[#2986FE] duration-200 ease-linear" onclick="toggleMenu()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path fill="#101010" d="M4 6a1 1 0 0 1 1-1h14a1 1 0 1 1 0 2H5a1 1 0 0 1-1-1m0 12a1 1 0 0 1 1-1h14a1 1 0 1 1 0 2H5a1 1 0 0 1-1-1m7-7a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2z" />
+                </svg>
+            </button>
+  
+            <!-- Sidebar (Hidden) -->
+            <div id="mobileSidebar" class="fixed top-0 left-0 w-full h-full bg-white transform translate-x-full transition-transform duration-200 ease-linear z-50">
+                <div class="p-5 flex justify-between items-center">
+                    <div class="flex items-center">
+                        <img src="logo.png" alt="logo" class="w-10">
+                        <h1 class="text-[20px] font-medium cursor-pointer"><a href="landing.html">Vigenture</a></h1>
+                    </div>
+                    <button onclick="toggleMenu()" class="text-[25px] hover:rotate-90 duration-200 ease-linear hover:text-[#C0000A]"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path fill="#101010" d="M18.3 5.71a.996.996 0 0 0-1.41 0L12 10.59L7.11 5.7A.996.996 0 1 0 5.7 7.11L10.59 12L5.7 16.89a.996.996 0 1 0 1.41 1.41L12 13.41l4.89 4.89a.996.996 0 1 0 1.41-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4" />
+                    </svg></button>
+                </div>
+
+                <ul class="mt-5 space-y-10 px-5">
+                    <li>
+                        <button onclick="toggleDropdown('mobileExploreDropdown')" class="w-full flex items-center text-left text-[16px] hover:text-[#366FD7] duration-200 ease-linear font-normal">Explore <span>
+                            <svg class="arrowDown" xmlns="http://www.w3.org/2000/svg" width="16" height="7" viewBox="0 0 16 7">
+                            <path fill="currentColor" d="M8 6.5a.47.47 0 0 1-.35-.15l-4.5-4.5c-.2-.2-.2-.51 0-.71s.51-.2.71 0l4.15 4.15l4.14-4.14c.2-.2.51-.2.71 0s.2.51 0 .71l-4.5 4.5c-.1.1-.23.15-.35.15Z" />
+                        </svg></span></button>
+                        <ul id="mobileExploreDropdown" class="hidden space-y-2 bg-[#E4E7EC] rounded-md">
+                            <li><a href="attractions.html" class="block hover:bg-gray-300 rounded-t-md py-2 px-2 duration-200 ease-linear">Attractions</a></li>
+                            <li><a href="activities.html" class="block hover:bg-gray-300 py-2 px-2 duration-200 ease-in-out">Activities</a></li>
+                            <li><a href="localfoods.html" class="block hover:bg-gray-300 rounded-b-md py-2 px-2 duration-300 ease-in-out">Local Foods</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <button onclick="toggleDropdown('mobileTripsDropdown')" class="w-full flex items-center text-left text-[16px] hover:text-[#366FD7] duration-200 ease-linear font-normal">Trips <span><svg class="arrowDown" xmlns="http://www.w3.org/2000/svg" width="16" height="7" viewBox="0 0 16 7">
+                            <path fill="currentColor" d="M8 6.5a.47.47 0 0 1-.35-.15l-4.5-4.5c-.2-.2-.2-.51 0-.71s.51-.2.71 0l4.15 4.15l4.14-4.14c.2-.2.51-.2.71 0s.2.51 0 .71l-4.5 4.5c-.1.1-.23.15-.35.15Z" />
+                        </svg></span></button>
+                        <ul id="mobileTripsDropdown" class="hidden space-y-2 border bg-[#E4E7EC] rounded-md">
+                            <li><a href="#" class="block hover:bg-gray-300 rounded-t-md py-2 px-2 duration-200 ease-linear">View my trips</a></li>
+                            <li><a href="#" class="block hover:bg-gray-300 py-2 px-2 duration-200 ease-linear">Create your own itinerary</a></li>
+                            <li><a href="#" class="block hover:bg-gray-300 rounded-b-md py-2 px-2 duration-200 ease-linear">Create itinerary with us</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <button onclick="toggleDropdown('mobileServicesDropdown')" class="w-full flex items-center text-left text-[16px] hover:text-[#366FD7] duration-200 ease-linear font-normal ">Services <span><svg class="arrowDown" xmlns="http://www.w3.org/2000/svg" width="16" height="7" viewBox="0 0 16 7">
+                            <path fill="currentColor" d="M8 6.5a.47.47 0 0 1-.35-.15l-4.5-4.5c-.2-.2-.2-.51 0-.71s.51-.2.71 0l4.15 4.15l4.14-4.14c.2-.2.51-.2.71 0s.2.51 0 .71l-4.5 4.5c-.1.1-.23.15-.35.15Z" />
+                        </svg></span></button>
+                        <ul id="mobileServicesDropdown" class="hidden space-y-2 border bg-[#E4E7EC] rounded-md">
+                            <li><a href="#" class="block hover:bg-gray-300 rounded-t-md py-2 px-2 duration-200 ease-linear">View my bookings</a></li>
+                            <li><a href="#" class="block hover:bg-gray-300 rounded-b-md py-2 px-2 duration-200 ease-linear">Car rental</a></li>
+                        </ul>
+                    </li>
+                    <hr>
+                    <li>
+                        <a href="how.html">
+                            <button class="w-full flex items-center text-left text-[16px] hover:text-[#366FD7] duration-200 ease-linear font-normal "><span class="mr-1.5">                                      <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 27 27" >
+                                <path fill="#0e1111" d="M13 0C5.925 0 0 5.08 0 11.5c0 3.03 1.359 5.748 3.5 7.781a6.7 6.7 0 0 1-1.094 1.875A16.5 16.5 0 0 1 .375 23.22A1 1 0 0 0 1 25c2.215 0 3.808-.025 5.25-.406c1.29-.342 2.399-1.058 3.531-2.063c1.03.247 2.093.469 3.219.469c7.075 0 13-5.08 13-11.5S20.075 0 13 0m0 2c6.125 0 11 4.32 11 9.5S19.125 21 13 21c-1.089 0-2.22-.188-3.25-.469a1 1 0 0 0-.938.25c-1.125 1.079-1.954 1.582-3.062 1.875c-.51.135-1.494.103-2.188.157c.14-.158.271-.242.407-.407c.786-.96 1.503-1.975 1.719-3.125a1 1 0 0 0-.344-.937C3.249 16.614 2 14.189 2 11.5C2 6.32 6.875 2 13 2m-1.906 3.906a1 1 0 0 0-.469.25l-1.5 1.407l1.344 1.468l1.187-1.125h2.406L15 8.97v1.469l-2.563 1.718A1 1 0 0 0 12 13v2h2v-1.438l2.563-1.718A1 1 0 0 0 17 11V8.594a1 1 0 0 0-.25-.656l-1.5-1.688a1 1 0 0 0-.75-.344h-3.188a1 1 0 0 0-.218 0M12 16v2h2v-2z" />
+                            </svg> </span> How it works</button>   
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <button class="w-full flex items-center text-left text-[16px] hover:text-[#366FD7] duration-200 ease-linear font-normal "><span class="mr-1.5">                   <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 32 32">
+                                <path fill="#0e1111" d="M27 16.76v-1.53l1.92-1.68A2 2 0 0 0 29.3 11l-2.36-4a2 2 0 0 0-1.73-1a2 2 0 0 0-.64.1l-2.43.82a11 11 0 0 0-1.31-.75l-.51-2.52a2 2 0 0 0-2-1.61h-4.68a2 2 0 0 0-2 1.61l-.51 2.52a11.5 11.5 0 0 0-1.32.75l-2.38-.86A2 2 0 0 0 6.79 6a2 2 0 0 0-1.73 1L2.7 11a2 2 0 0 0 .41 2.51L5 15.24v1.53l-1.89 1.68A2 2 0 0 0 2.7 21l2.36 4a2 2 0 0 0 1.73 1a2 2 0 0 0 .64-.1l2.43-.82a11 11 0 0 0 1.31.75l.51 2.52a2 2 0 0 0 2 1.61h4.72a2 2 0 0 0 2-1.61l.51-2.52a11.5 11.5 0 0 0 1.32-.75l2.42.82a2 2 0 0 0 .64.1a2 2 0 0 0 1.73-1l2.28-4a2 2 0 0 0-.41-2.51ZM25.21 24l-3.43-1.16a8.9 8.9 0 0 1-2.71 1.57L18.36 28h-4.72l-.71-3.55a9.4 9.4 0 0 1-2.7-1.57L6.79 24l-2.36-4l2.72-2.4a8.9 8.9 0 0 1 0-3.13L4.43 12l2.36-4l3.43 1.16a8.9 8.9 0 0 1 2.71-1.57L13.64 4h4.72l.71 3.55a9.4 9.4 0 0 1 2.7 1.57L25.21 8l2.36 4l-2.72 2.4a8.9 8.9 0 0 1 0 3.13L27.57 20Z" />
+                                <path fill="#0e1111" d="M16 22a6 6 0 1 1 6-6a5.94 5.94 0 0 1-6 6m0-10a3.91 3.91 0 0 0-4 4a3.91 3.91 0 0 0 4 4a3.91 3.91 0 0 0 4-4a3.91 3.91 0 0 0-4-4" />
+                            </svg> </span> Settings</button>
+                        </a>
+                    </li>
+                </ul>
+  
+                <div class="absolute bottom-10 left-0 right-0 px-5 flex flex-col space-y-3">
+                    <p  class="block cursor-pointer text-center bg-[#C0000A] hover:bg-red-500 text-white border py-2 rounded-md font-semibold transition duration-200 ease-linear">
+                        Log Out
+                    </p>
+                </div>
+  
+  
+            </div>
+  
+            <!-- Overlay (Click to Close Sidebar) -->
+            <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40" onclick="toggleMenu()"></div>
+  
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="2xl:w-[63%] m-auto">
+        <div class="mt-20 md:h-[300px]">
+        <div class="relative h-full w-[95%] m-auto overflow-hidden">
+    
+    
+            <div class="md:absolute md:left-10 lg:left-32  left-5 relative z-10">
+                <p class="text-[16px] md:text-[18px] mt-10 font-normal">TOP ACTIVITIES YOU’LL LOVE!</p>
+                <h1 class="text-[38px] md:text-[48px] font-medium leading-tight">Explore The Best<br>Activities Of<br>Metro Vigan</h1>
+            </div>
+    
+            <img src="banner.jpg" alt="Banner" class="w-[90%] m-auto sm:mt-6 md:mt-0 md:w-full h-full object-cover rounded-[30px] ">
+
+        </div>
+        </div>
+
+    </section>
+
+
+    <!-- FILTER SECTION -->
+    <section class="w-[95%] lg:w-[95%] 2xl:w-[60%] mt-16 2xl:mt-16 flex items-center m-auto flex-wrap justify-start  ">
+        <div>
+            <ul class="filter-buttons flex flex-wrap justify-evenly md:justify-end lg:justify-evenly 2xl:justify-start space-y-1.5 md:space-y-0 items-center space-x-2.5">
+                <li>
+                    <select id="municipality" name="municipality" 
+                    class="bg-[#f9f9fb] w-[140px] mb-2 lg:mb-0  md:w-[165px] px-3 md:mr-6 py-1.5 rounded-[5px] text-[14px] md:text-[16px] outline-none focus:outline-none focus:ring-1 focus:ring-[#2986FE] duration-200 ease-linear cursor-pointer text-gray-400"
+                    onchange="this.classList.remove('text-gray-400')">
+                        <option value="">Municipality</option>
+                        <option value="Vigan">Vigan</option>
+                        <option value="Bantay">Bantay</option>
+                        <option value="Caoayan">Caoayan</option>
+                        <option value="Sta. Catalina">Sta. Catalina</option>
+                        <option value="San Vicente">San Vicente</option>
+                    </select>
+                </li>
+
+
+
+            </ul>
+        </div>
+    </section>
+
+
+    <!-- ATTRACTIONS SECTION -->
+    <section class="w-[85%] lg:w-[85%] 2xl:w-[60%] mt-24 m-auto mb-96">
+        <div class="">
+            <div class="flex flex-wrap justify-between w-full">
+
+             <!-- locations -->
+             <a href="location.html" class="w-[47%] md:w-auto mb-2 hover:bg-[#F9F9FB] hover:shadow-md duration-200 ease-linear rounded-[10px] group md:rounded-[20px] px-2 hover:scale-[1.02]">
+                <div class="w-[100%] md:w-fit border md:border-0 py-2 rounded-[10px] md:rounded-[20px]">
+                    <div class="w-full h-[120px] md:w-[280px] md:h-[200px] px-2 md:px-0 relative overflow-hidden rounded-[10px] md:rounded-[20px]">
+                        <img src="banner.jpg" alt="Calle" class="w-full h-full object-cover rounded-[10px] md:rounded-[20px] group-hover:scale-105 duration-200 ease-linear">
+                    </div>
+                    <div class="mt-3 m-auto">
+                        <h1 class="text-[16px] md:text-[18px] font-medium px-2 md:px-4 h-[50px] md:h-fit">Kalesa Riding</h1>
+                        <div class="flex flex-wrap space-y-1 md:space-y-0 items-center justify-between ">
+                            <div class="flex items-center text-[#5F7281] px-1 md:px-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                    <path fill="#5F7281" d="M12 11.5A2.5 2.5 0 0 1 9.5 9A2.5 2.5 0 0 1 12 6.5A2.5 2.5 0 0 1 14.5 9a2.5 2.5 0 0 1-2.5 2.5M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7" />
+                                </svg>
+                                <p class=" text-[12px] md:text-[14px]">Vigan</p>
+                            </div>
+                            <div class="px-1 md:px-3">
+                                <p class="bg-[#2986FE] text-white text-[12px] md:text-[14px] px-1.5 rounded-[99px]">Tour</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a> 
+            
+
+           
+
+
+
+
+
+               
+
+            </div>
+        </div>
+
+    </section>
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+    <!-- EXPLORE MORE -->
+    <section class="w-[85%] lg:w-[85%] 2xl:w-[60%] mt-24 m-auto relative">
+        <div class="relative mb-4">
+            <h1 class="text-[28px] md:text-[34px] bg-white z-10 font-medium w-fit pr-6">Explore More</h1>
+            <div class="border border-[#8A9BA8] top-1/2 w-full -z-10 absolute"></div>        
+        </div>        
+        <div class="h-fit flex flex-wrap justify-between lg:justify-start lg:gap-10">
+
+                <!-- locations -->
+                <a href="attractions.html" class="w-[47%] md:w-auto mb-2 hover:bg-[#F9F9FB] hover:shadow-md duration-200 ease-linear group rounded-[10px] md:rounded-[20px] px-2 hover:scale-[1.02]">
+                    <div class="w-[100%] md:w-fit border md:border-0 py-2 rounded-[10px] md:rounded-[20px]">
+                        <div class="w-full h-[120px] md:w-[280px] md:h-[200px] px-2 md:px-0 relative overflow-hidden rounded-[10px] md:rounded-[20px]">
+                            <img src="banner.jpg" alt="Calle" class="w-full h-full object-cover rounded-[10px] md:rounded-[20px] group-hover:scale-105 duration-200 ease-linear">
+                        </div>
+                        <div class="mt-3 m-auto">
+                            <h1 class="text-[16px] md:text-[18px] font-medium px-2 md:px-4 h-[50px] md:h-fit">Attractions</h1>
+                        </div>
+                    </div>
+                </a>           
+
+
+                <!-- locations -->
+                <a href="activities.html" class="w-[47%] md:w-auto mb-2 hover:bg-[#F9F9FB] hover:shadow-md duration-200 ease-linear rounded-[10px] group md:rounded-[20px] px-2 hover:scale-[1.02]">
+                    <div class="w-[100%] md:w-fit border md:border-0 py-2 rounded-[10px] md:rounded-[20px]">
+                        <div class="w-full h-[120px] md:w-[280px] md:h-[200px] px-2 md:px-0 relative overflow-hidden rounded-[10px] md:rounded-[20px]">
+                            <img src="banner.jpg" alt="Calle" class="w-full h-full object-cover rounded-[10px] md:rounded-[20px] group-hover:scale-105 duration-200 ease-linear">
+                        </div>
+                        <div class="mt-3 m-auto">
+                            <h1 class="text-[16px] md:text-[18px] font-medium px-2 md:px-4 h-[50px] md:h-fit">Activities</h1>
+                        </div>
+                    </div>
+                </a>           
+
+        </div>
+    </section>
+
+
+
+
+
+
+    <!-- FOOTER -->
+    <footer class=" 2xl:w-[60%] mt-24 m-auto bg-[#F9F9FB] px-4">
+        <div class="flex flex-wrap">
+
+            <div class="w-full md:w-[33.3333333%] flex flex-col mb-10 md:mb-0">
+                <div class="m-auto">
+                    <div class="flex items-center mt-10">
+                        <img src="logo.png" alt="logo" class="w-14">
+                        <h1 class="text-[24px] md:text-[28px] font-medium cursor-pointer">Vigenture</h1>
+                    </div>
+                    <div>
+                        <p class="text-[16px] md:text-[18px] ml-14 text-[#5F7281]">For Explorers Everywhere</p>
+                    </div>
+                    <div class="mt-10 flex items-center ml-14 space-x-4">
+                        <a href="https://www.facebook.com/VCCATO" target="_blank"><img src="facebook.png" alt="" class="w-[35px] h-[35px] hover:scale-110 duration-200 ease-linear"></a>
+                        <a href="https://www.facebook.com/VCCATO" target="_blank"><img src="ig.png" alt="" class="w-[35px] h-[35px] hover:scale-110 duration-200 ease-linear"></a>
+                        <a href="https://www.facebook.com/VCCATO" target="_blank"><img src="tik-tok.png" alt="" class="w-[35px] h-[35px] hover:scale-110 duration-200 ease-linear"></a>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="w-[48%] md:w-[33.3333333%] flex flex-col items-center justify-center">
+                 <ul>
+                    <h1 class="text-[16px] md:text-[18px] font-medium mb-4">Company</h1>
+
+                    <li class="text-[12px] md:text-[14px] font-light"><a href="">About Us</a></li>
+                    <li class="text-[12px] md:text-[14px] font-light"><a href="">Car Providers</a></li>
+                    <li class="text-[12px] md:text-[14px] font-light"><a href="">Contact</a></li>
+
+                 </ul>                
+            </div>
+
+            <div class="w-[48%] md:w-[33.3333333%] flex flex-col items-center justify-center">
+                <ul>
+                   <h1 class="text-[16px] md:text-[18px] font-medium mb-4">Extra Links</h1>
+
+                   <li class="text-[12px] md:text-[14px] font-light"><a href="">Tourist Support</a></li>
+                   <li class="text-[12px] md:text-[14px] font-light"><a href="">Terms & Condition</a></li>
+                   <li class="text-[12px] md:text-[14px] font-light"><a href="">Privacy Policy</a></li>
+
+                </ul>                
+           </div>
+            
+        </div>
+
+        <div class="border-t border-[#5F7281] w-[90%] m-auto py-4 mt-32">
+            <h1 class="text-center text-[#5F7281] text-[12px] md:text-[14px]">© 2025 Vigenture. All Rights Reserved.</h1>
+        </div>
+    </footer>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+    // FUNCTION FOR NAVBAR DROPDOWN
+    document.addEventListener("DOMContentLoaded", function () {
+        const navButtons = document.querySelectorAll("nav ul li button"); 
+        const dropdowns = document.querySelectorAll("nav ul li ul"); 
+
+        navButtons.forEach(button => {
+            button.addEventListener("click", function (event) {
+                event.stopPropagation(); // Prevents click event from bubbling up
+
+                // Remove active state and rotation from all buttons
+                navButtons.forEach(btn => {
+                    btn.classList.remove("active");
+                    btn.style.backgroundColor = "";
+                    btn.style.color = "";
+                    const arrow = btn.querySelector(".arrowDown");
+                    if (arrow) arrow.classList.remove("rotate-180");
+                });
+
+                // Close all dropdowns
+                dropdowns.forEach(dropdown => {
+                    dropdown.classList.add("hidden");
+                });
+
+                // Toggle the corresponding dropdown menu
+                const dropdownId = this.getAttribute("onclick").match(/'([^']+)'/)[1]; 
+                const dropdownMenu = document.getElementById(dropdownId);
+
+                if (dropdownMenu.classList.contains("hidden")) {
+                    // Open: add styles and rotate arrow
+                    this.classList.add("active");
+                    this.style.backgroundColor = "#2986FE";
+                    this.style.color = "#fafafa";
+                    dropdownMenu.classList.remove("hidden");
+                    const arrow = this.querySelector(".arrowDown");
+                    if (arrow) arrow.classList.add("rotate-180");
+                }
+            });
+        });
+
+        // Click outside to close everything
+        document.addEventListener("click", function () {
+            navButtons.forEach(btn => {
+                btn.classList.remove("active");
+                btn.style.backgroundColor = "";
+                btn.style.color = "";
+                const arrow = btn.querySelector(".arrowDown");
+                if (arrow) arrow.classList.remove("rotate-180");
+            });
+
+            dropdowns.forEach(dropdown => {
+                dropdown.classList.add("hidden");
+            });
+        });
+    });
+
+
+
+
+    // FUNCTION FOR SIDEBAR NAV MENU(MOBILE VIEW)
+    function toggleMenu() {
+        const sidebar = document.getElementById("mobileSidebar");
+        const overlay = document.getElementById("overlay");
+        
+        const isOpen = sidebar.classList.contains("translate-x-0");
+
+        if (isOpen) {
+            sidebar.classList.add("translate-x-full");
+            sidebar.classList.remove("translate-x-0");
+            overlay.classList.add("hidden");
+        } else {
+            sidebar.classList.remove("translate-x-full");
+            sidebar.classList.add("translate-x-0");
+            overlay.classList.remove("hidden");
+        }
+    }
+
+
+    // FUNCTION FOR HOME NAV
+    function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    }
+
+
+
+
+
+    //FUNCTION FOR NAME DROPDOWN
+    function toggleDropdownName(dropdownId, event) {
+        event.stopPropagation();
+        
+        const dropdown = document.getElementById(dropdownId);
+        const button = document.getElementById("nameDropdownBtn");
+        const svg = button.querySelector(".arrowDown");
+
+        if (dropdown.classList.contains("hidden")) {
+            dropdown.classList.remove("hidden");
+            button.classList.add("bg-[#2986FE]", "text-white", "rounded-2xl");
+            svg.classList.add("rotate-180");
+        } else {
+            dropdown.classList.add("hidden");
+            button.classList.remove("bg-[#2986FE]", "text-white", "rounded-2xl");
+            svg.classList.remove("rotate-180");
+        }
+    }
+
+    // Close dropdown on outside click
+    document.addEventListener("click", function (event) {
+        const dropdown = document.getElementById("nameDropdown");
+        const button = document.getElementById("nameDropdownBtn");
+
+        // If dropdown is open and clicked outside both dropdown and button
+        if (!dropdown.classList.contains("hidden") && !button.contains(event.target)) {
+            dropdown.classList.add("hidden");
+            button.classList.remove("bg-[#2986FE]", "text-white", "rounded-2xl");
+            
+            const svg = button.querySelector(".arrowDown");
+            svg.classList.remove("rotate-180"); // reset arrow
+        }
+    });
+
+    
+
+
+
+
+
+// Close dropdown when clicking outside
+document.addEventListener("click", function () {
+    let dropdown = document.getElementById("nameDropdown");
+    let button = document.getElementById("nameDropdownBtn");
+
+    if (!dropdown.classList.contains("hidden")) {
+        dropdown.classList.add("hidden");
+        button.classList.remove("bg-[#2986FE]", "text-white", "rounded-2xl");
+    }
+});
+
+
+
+
+
+
+
+function toggleDropdown(dropdownId) {
+    const dropdown = document.getElementById(dropdownId);
+    const button = document.querySelector(`[onclick="toggleDropdown('${dropdownId}')"]`);
+    const arrow = button.querySelector(".arrowDown");
+
+    const allDropdowns = document.querySelectorAll("#mobileSidebar ul ul");
+    const allArrows = document.querySelectorAll("#mobileSidebar .arrowDown");
+
+    allDropdowns.forEach(d => {
+        if (d.id !== dropdownId) d.classList.add("hidden");
+    });
+
+    allArrows.forEach(a => {
+        a.classList.remove("rotate-180");
+    });
+
+    dropdown.classList.toggle("hidden");
+    arrow.classList.toggle("rotate-180");
+
+    // Remove previous listener to avoid duplicates
+    document.removeEventListener("click", handleOutsideClick);
+
+    // Add a short timeout to avoid immediate closing from the same click
+    setTimeout(() => {
+        document.addEventListener("click", handleOutsideClick);
+    }, 0);
+
+    function handleOutsideClick(e) {
+        if (!dropdown.contains(e.target) && !button.contains(e.target)) {
+            dropdown.classList.add("hidden");
+            arrow.classList.remove("rotate-180");
+            document.removeEventListener("click", handleOutsideClick);
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+
+    <script>
+      // Get all filter elements
+const municipalitySelect = document.getElementById('municipality');
+const filterButtons = document.querySelectorAll('.filter-buttons li button');
+
+// Get all attraction cards
+const attractionCards = document.querySelectorAll('a[href="location.html"]');
+
+// Function to reset all filter buttons to default style
+function resetFilterButtons() {
+    filterButtons.forEach(button => {
+        // Remove active styles
+        button.classList.remove('bg-[#2986FE]', 'text-white', 'border-[#2986FE]', 'font-medium');
+        // Add inactive styles
+        button.classList.add('border-[#101010]');
+    });
+}
+
+// Function to activate a specific filter button
+function activateFilterButton(button) {
+    resetFilterButtons();
+    // Add active styles
+    button.classList.add('bg-[#2986FE]', 'text-white', 'font-medium', 'border-[#2986FE]');
+    // Remove inactive styles
+    button.classList.remove('border-[#101010]');
+}
+
+// Function to filter attractions based on both municipality and category
+function filterAttractions() {
+    const selectedMunicipality = municipalitySelect.value;
+    
+    // Find the active button and get its category text
+    const activeButton = document.querySelector('.filter-buttons button.bg-\\[\\#2986FE\\]');
+    const selectedCategory = activeButton ? activeButton.textContent.trim() : 'All';
+    
+    attractionCards.forEach(card => {
+        const cardMunicipality = card.querySelector('.text-\\[\\#5F7281\\] p').textContent.trim();
+        const cardCategory = card.querySelector('.bg-\\[\\#2986FE\\]').textContent.trim();
+        
+        // Check if the card matches both filters or if the respective filter is not set
+        const matchesMunicipality = selectedMunicipality === '' || cardMunicipality === selectedMunicipality;
+        const matchesCategory = selectedCategory === 'All' || cardCategory === selectedCategory;
+        
+        // Show or hide the card based on the filters
+        if (matchesMunicipality && matchesCategory) {
+            card.style.display = '';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+// Add event listener to municipality dropdown
+municipalitySelect.addEventListener('change', filterAttractions);
+
+// Add event listeners to all category buttons
+filterButtons.forEach(button => {
+    button.addEventListener('click', function() {
+        activateFilterButton(this);
+        filterAttractions();
+    });
+});
+
+// Ensure the "All" button is active by default
+const allButton = filterButtons[0]; // First button should be "All"
+activateFilterButton(allButton);
+
+    </script>
+    <script>
+      // Food data - iyalis mo db(dim liplipatan bobo)
+const foodData = {
+    "Emapanada": {
+        name: "Emapanada",
+        description: "Empanada is a stuffed pastry made of thin, crispy dough filled with a savory mixture of meat, vegetables, and egg. The Vigan empanada is distinctive for its orange-colored rice flour dough and unique filling of green papaya, mung bean sprouts, and longganisa (local sausage).",
+        image: "../src/assets/img/landingpage/banner.jpg",
+        location: "Vigan",
+        category: "Snack",
+        ingredients: [
+            "Rice flour dough",
+            "Green papaya",
+            "Vigan longganisa",
+            "Mung bean sprouts",
+            "Egg"
+        ],
+        where_to_try: [
+            "Irene's Empanada",
+            "Vigan Public Market",
+            "Hidden Garden"
+        ]
+    },
+    "Longganisa": {
+        name: "Longganisa",
+        description: "Vigan longganisa is a local sausage known for its garlicky flavor and unique preparation. Unlike other Filipino longganisa varieties, Vigan longganisa has less fat and uses local sugarcane vinegar, giving it a distinctive tangy taste.",
+        image: "../src/assets/img/landingpage/banner.jpg",
+        location: "Vigan",
+        category: "Dish",
+        ingredients: [
+            "Ground pork",
+            "Garlic",
+            "Sugarcane vinegar",
+            "Local spices",
+            "Natural casings"
+        ],
+        where_to_try: [
+            "Cafe Leona",
+            "Grandpa's Inn Restaurant",
+            "Vigan Public Market"
+        ]
+    },
+    "Bagnet": {
+        name: "Bagnet",
+        description: "Bagnet is the Ilocano version of deep-fried pork belly. It's characterized by its crispy skin and tender meat, achieved through a process of boiling the pork belly with spices, drying it, and then deep-frying it twice to achieve maximum crispiness.",
+        image: "../src/assets/img/landingpage/banner.jpg",
+        location: "Vigan",
+        category: "Dish",
+        ingredients: [
+            "Pork belly",
+            "Salt",
+            "Pepper",
+            "Bay leaves",
+            "Garlic"
+        ],
+        where_to_try: [
+            "Cafe Leona",
+            "Kusina Felicitas",
+            "BarToque Resto"
+        ]
+    },
+    "Sinanglao": {
+        name: "Sinanglao",
+        description: "Sinanglao is a traditional Ilocano soup dish made with beef parts, particularly innards, slow-cooked in a broth flavored with bile and local herbs. It's considered both a delicacy and a comfort food, often enjoyed as a hearty meal or a cure for hangovers.",
+        image: "../src/assets/img/landingpage/banner.jpg",
+        location: "Vigan",
+        category: "Soup",
+        ingredients: [
+            "Beef innards and parts",
+            "Beef bile",
+            "Ginger",
+            "Onions",
+            "Kamias (sour fruit)"
+        ],
+        where_to_try: [
+            "Cafe Leona",
+            "Kusina Felicitas",
+            "Local carinderias"
+        ]
+    },
+    "Poqui-Poqui": {
+        name: "Poqui-Poqui",
+        description: "Poqui-Poqui is a vegetable dish made from grilled eggplants, mixed with eggs, tomatoes, and onions. The eggplants are grilled until the skin chars, giving the dish a smoky flavor. It's a simple yet flavorful dish that highlights the natural taste of fresh ingredients.",
+        image: "../src/assets/img/landingpage/banner.jpg",
+        location: "Vigan",
+        category: "Dish",
+        ingredients: [
+            "Grilled eggplant",
+            "Eggs",
+            "Tomatoes",
+            "Onions",
+            "Garlic"
+        ],
+        where_to_try: [
+            "Cafe Leona",
+            "Hidden Garden",
+            "Local restaurants"
+        ]
+    },
+    "Bibingka": {
+        name: "Bibingka",
+        description: "Bibingka is a type of rice cake traditionally cooked in clay pots lined with banana leaves. The Ilocos version often uses glutinous rice flour and is topped with a variety of ingredients like cheese, salted egg, or coconut. It has a slightly sweet taste with a soft, moist texture.",
+        image: "../src/assets/img/landingpage/banner.jpg",
+        location: "Vigan",
+        category: "Snack",
+        ingredients: [
+            "Glutinous rice flour",
+            "Coconut milk",
+            "Sugar",
+            "Baking powder",
+            "Optional toppings (cheese, salted egg)"
+        ],
+        where_to_try: [
+            "Vigan Public Market",
+            "Local bakeries",
+            "Street food vendors"
+        ]
+    },
+    "Tupig": {
+        name: "Tupig",
+        description: "Tupig is a sticky rice cake wrapped in banana leaves and grilled over charcoal. It's made with glutinous rice flour, coconut strips, and coconut milk, giving it a sweet, coconutty flavor and a chewy texture. The grilling process adds a smoky aroma to this traditional Ilocano delicacy.",
+        image: "../src/assets/img/landingpage/banner.jpg",
+        location: "Vigan",
+        category: "Snack",
+        ingredients: [
+            "Glutinous rice flour",
+            "Coconut strips",
+            "Coconut milk",
+            "Sugar",
+            "Banana leaves"
+        ],
+        where_to_try: [
+            "Vigan Public Market",
+            "Highway vendors",
+            "Local specialty shops"
+        ]
+    },
+    "Pipian": {
+        name: "Pipian",
+        description: "Pipian is a traditional Ilocano dish made from ground rice, chicken or pork, achuete (annatto seeds), and peanuts. It has a thick, sauce-like consistency with a slightly nutty flavor. The dish is often served during special occasions and celebrations in the Ilocos region.",
+        image: "../src/assets/img/landingpage/banner.jpg",
+        location: "Vigan",
+        category: "Snack",
+        ingredients: [
+            "Ground rice",
+            "Chicken or pork",
+            "Achuete (annatto seeds)",
+            "Ground peanuts",
+            "Garlic and onions"
+        ],
+        where_to_try: [
+            "Cafe Leona",
+            "Kusina Felicitas",
+            "Local homes during festivals"
+        ]
+    },
+    "Dinengdeng": {
+        name: "Dinengdeng",
+        description: "Dinengdeng is a vegetable soup dish made with various local vegetables, bagoong (fermented fish paste), and grilled fish. It's known for its light, refreshing taste and is considered a healthy, nutritious meal that showcases the abundance of fresh produce in the region.",
+        image: "../src/assets/img/landingpage/banner.jpg",
+        location: "Vigan",
+        category: "Dish",
+        ingredients: [
+            "Assorted vegetables (string beans, okra, bitter gourd)",
+            "Bagoong (fermented fish paste)",
+            "Grilled fish",
+            "Tomatoes",
+            "Ginger"
+        ],
+        where_to_try: [
+            "Cafe Leona",
+            "Kusina Felicitas",
+            "Local carinderias"
+        ]
+    },
+    "Igado": {
+        name: "Igado",
+        description: "Igado is an Ilocano dish made from pork tenderloin and liver, stir-fried with vegetables and marinated in soy sauce and vinegar. The name comes from the Spanish word 'higado,' meaning liver. It's known for its savory taste with a hint of sourness from the vinegar.",
+        image: "../src/assets/img/landingpage/banner.jpg",
+        location: "Vigan",
+        category: "Dish",
+        ingredients: [
+            "Pork tenderloin",
+            "Pork liver",
+            "Bell peppers",
+            "Carrots",
+            "Soy sauce and vinegar"
+        ],
+        where_to_try: [
+            "Cafe Leona",
+            "Kusina Felicitas",
+            "Local restaurants"
+        ]
+    }
+};
+
+// Create popup container and add it to the document
+const popupContainer = document.createElement('div');
+popupContainer.classList.add('food-popup', 'fixed', 'inset-0', 'z-50', 'bg-white', 'overflow-auto', 'hidden');
+document.body.appendChild(popupContainer);
+
+// Store original body overflow style
+let originalBodyOverflow;
+
+// Initialize food cards click event
+function initializeFoodCards() {
+    const foodCards = document.querySelectorAll('a[href="location.html"]');
+    
+    foodCards.forEach(card => {
+        card.addEventListener('click', function(e) {
+            e.preventDefault(); // Prevent navigation to location.html
+            
+            // Get food name from the card
+            const foodName = card.querySelector('h1').textContent.trim();
+            
+            // Get food data
+            const food = foodData[foodName];
+            
+            if (food) {
+                showFoodPopup(food);
+            } else {
+                console.error('Food data not found for:', foodName);
+            }
+        });
+    });
+}
+
+// Function to disable background scrolling
+function disableBackgroundScroll() {
+    // Store current scroll position and body overflow style
+    originalBodyOverflow = document.body.style.overflow;
+    
+    // Disable scrolling
+    document.body.style.overflow = 'hidden';
+}
+
+// Function to enable background scrolling
+function enableBackgroundScroll() {
+    // Restore original overflow style
+    document.body.style.overflow = originalBodyOverflow;
+}
+
+// Function to show food popup
+function showFoodPopup(food) {
+    // Disable background scrolling
+    disableBackgroundScroll();
+    
+    // Create ingredients HTML
+    const ingredientsHTML = food.ingredients.map(ingredient => 
+        `<li class="py-1 flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-[#2986FE]">
+                <polyline points="9 11 12 14 22 4"></polyline>
+            </svg>
+            ${ingredient}
+        </li>`
+    ).join('');
+    
+    // Create where to try HTML
+    const whereToTryHTML = food.where_to_try.map(place => 
+        `<li class="py-1 flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-[#2986FE]">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            ${place}
+        </li>`
+    ).join('');
+    
+    // Get other foods for recommendations (exclude current one and match category)
+    const similarFoods = Object.values(foodData).filter(item => 
+        item.name !== food.name && item.category === food.category
+    );
+    
+    // Get up to 3 similar foods
+    let recommendedFoods = similarFoods.length > 3 ? 
+        similarFoods.slice(0, 3) : similarFoods;
+    
+    // If we don't have enough similar foods by category, add some others
+    if (recommendedFoods.length < 3) {
+        const otherFoods = Object.values(foodData).filter(item => 
+            item.name !== food.name && item.category !== food.category
+        );
+        
+        const neededCount = 3 - recommendedFoods.length;
+        recommendedFoods = [
+            ...recommendedFoods,
+            ...otherFoods.slice(0, neededCount)
+        ];
+    }
+    
+    // Create recommendations HTML
+    let recommendationsHTML = '';
+    recommendedFoods.forEach(recommendedFood => {
+        recommendationsHTML += `
+        <div class="food-card cursor-pointer" data-food="${recommendedFood.name}">
+            <div class="w-full md:w-auto border rounded-lg overflow-hidden hover:shadow-md transition-all duration-200 hover:scale-[1.02]">
+                <div class="h-[150px] overflow-hidden">
+                    <img src="${recommendedFood.image}" alt="${recommendedFood.name}" class="w-full h-full object-cover">
+                </div>
+                <div class="p-4">
+                    <h3 class="text-lg font-medium mb-2">${recommendedFood.name}</h3>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center text-[#5F7281]">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                <path fill="#5F7281" d="M12 11.5A2.5 2.5 0 0 1 9.5 9A2.5 2.5 0 0 1 12 6.5A2.5 2.5 0 0 1 14.5 9a2.5 2.5 0 0 1-2.5 2.5M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7" />
+                            </svg>
+                            <p class="text-sm ml-1">${recommendedFood.location}</p>
+                        </div>
+                        <div>
+                            <p class="bg-[#2986FE] text-white text-xs px-2 py-1 rounded-full">${recommendedFood.category}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+    });
+    
+    // Populate popup content
+    popupContainer.innerHTML = `
+        <div class="relative w-full h-full flex flex-col">
+            <!-- Close button -->
+            <button id="close-popup" class="absolute top-4 right-4 z-10 bg-white rounded-full p-2 shadow-md">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            
+            <!-- Image section -->
+            <div class="w-full h-[40vh] md:h-[50vh] relative">
+                <img src="${food.image}" alt="${food.name}" class="w-full h-full object-cover">
+            </div>
+            
+            <!-- Content section -->
+            <div class="flex flex-col md:flex-row w-full py-6 px-4 md:px-8">
+                <!-- Food info -->
+                <div class="w-full md:w-3/5 pr-0 md:pr-8 mb-8 md:mb-0">
+                    <h1 class="text-2xl md:text-3xl font-bold mb-4">${food.name}</h1>
+                    <div class="flex items-center mb-4">
+                        <div class="flex items-center text-[#5F7281] mr-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                <path fill="#5F7281" d="M12 11.5A2.5 2.5 0 0 1 9.5 9A2.5 2.5 0 0 1 12 6.5A2.5 2.5 0 0 1 14.5 9a2.5 2.5 0 0 1-2.5 2.5M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7" />
+                            </svg>
+                            <p class="ml-1">${food.location}</p>
+                        </div>
+                        <div>
+                            <p class="bg-[#2986FE] text-white text-xs px-2 py-1 rounded-full">${food.category}</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 mb-6">${food.description}</p>
+                </div>
+                
+                <!-- Ingredients and where to try -->
+                <div class="w-full md:w-2/5">
+                    <div class="border rounded-lg mb-6 p-4">
+                        <h2 class="font-semibold mb-3">Main Ingredients</h2>
+                        <ul class="list-none">
+                            ${ingredientsHTML}
+                        </ul>
+                    </div>
+                    
+                    <div class="border rounded-lg p-4">
+                        <h2 class="font-semibold mb-3">Where to Try</h2>
+                        <ul class="list-none">
+                            ${whereToTryHTML}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Other Foods Section -->
+            <div class="w-full py-6 px-4 md:px-8 border-t">
+                <h2 class="text-xl md:text-2xl font-bold mb-6">Other Foods You Might Like</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    ${recommendationsHTML}
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Show popup
+    popupContainer.classList.remove('hidden');
+    
+    // Add event listeners
+    document.getElementById('close-popup').addEventListener('click', closeFoodPopup);
+    
+    // Add event listeners to recommendation cards
+    const recommendationCards = document.querySelectorAll('.food-card');
+    recommendationCards.forEach(card => {
+        card.addEventListener('click', function() {
+            const foodName = this.dataset.food;
+            const selectedFood = foodData[foodName];
+            
+            if (selectedFood) {
+                // Close current popup and open new one
+                closeFoodPopup();
+                setTimeout(() => {
+                    showFoodPopup(selectedFood);
+                }, 100);
+            }
+        });
+    });
+    
+    // Add escape key event listener
+    document.addEventListener('keydown', handleEscKeyPress);
+}
+
+// Function to close food popup
+function closeFoodPopup() {
+    popupContainer.classList.add('hidden');
+    document.removeEventListener('keydown', handleEscKeyPress);
+    
+    // Re-enable background scrolling
+    enableBackgroundScroll();
+}
+
+// Function to handle escape key press
+function handleEscKeyPress(e) {
+    if (e.key === 'Escape') {
+        closeFoodPopup();
+    }
+}
+
+// Initialize filter functionality
+function initializeFilters() {
+    const municipalitySelect = document.getElementById('municipality');
+    const categoryButtons = document.querySelectorAll('.filter-buttons button');
+    const foodCards = document.querySelectorAll('a[href="location.html"]');
+    
+    // Filter function
+    function filterFoods() {
+        const selectedMunicipality = municipalitySelect.value;
+        const selectedCategory = Array.from(categoryButtons).find(btn => 
+            btn.classList.contains('bg-[#2986FE]')
+        )?.textContent.trim() || 'All';
+        
+        foodCards.forEach(card => {
+            const foodLocation = card.querySelector('.text-[#5F7281] p').textContent.trim();
+            const foodCategory = card.querySelector('.bg-[#2986FE]').textContent.trim();
+            
+            // Check if card matches both filters
+            const matchesMunicipality = selectedMunicipality === '' || foodLocation === selectedMunicipality;
+            const matchesCategory = selectedCategory === 'All' || foodCategory === selectedCategory;
+            
+            // Show/hide card
+            if (matchesMunicipality && matchesCategory) {
+                card.style.display = '';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+    
+    // Municipality filter event
+    municipalitySelect.addEventListener('change', filterFoods);
+    
+    // Category filter events
+    categoryButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove active class from all buttons
+            categoryButtons.forEach(btn => {
+                btn.classList.remove('bg-[#2986FE]', 'text-white');
+                btn.classList.add('border-[#101010]');
+            });
+            
+            // Add active class to clicked button
+            this.classList.add('bg-[#2986FE]', 'text-white');
+            this.classList.remove('border-[#101010]');
+            
+            // Apply filters
+            filterFoods();
+        });
+    });
+}
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    initializeFoodCards();
+    initializeFilters();
+});
+    </script>
+</body>
+</html>

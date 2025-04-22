@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vigenture</title>
+    <!-- font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Fira+Code:wght@300..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Mulish:ital,wght@0,200..1000;1,200..1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Public+Sans:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap" rel="stylesheet">
+    <!-- tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- css -->
+    <link href="../src/style/output.css" rel="stylesheet">
+
+    <!-- breakpoints -->
+    <script>
+    tailwind.config = {
+    theme: {
+    extend: {
+      screens: {
+        'sm': '300px',  // (phones)
+        'md': '768px',  // (tablets)
+        'lg': '1025px', // (laptops/desktops)
+        'xl': '1280px', // Extra large devices
+        '2xl': '1536px' // Extra extra large screens
+                },
+            },
+        },
+    }
+    </script>
+
+
+    <!-- map api -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""/>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""></script>
+
+
+<style>
+.arrowDown {
+    transition: transform 0.3s ease;
+}
+
+.rotate-180 {
+    transform: rotate(180deg);
+}
+</style>
+
+
+
+
+</head>
+<body style="font-family: 'DM Sans', sans-serif;" class="bg-white text-[#101010] scroll-smooth">
+
+    <!-- HEADER -->
+    <header class=" fixed top-0 w-full z-20 bg-white">
+        <div class="flex justify-between items-center px-10 py-3 relative duration-300 ease-in-out 2xl:w-[65%] m-auto">
+            <div class="flex items-center">
+                <img src="logo.png" alt="logo" class="w-10">
+                <h1 class="text-[20px] md:text-[24px] font-medium cursor-pointer">Vigenture</h1>
+            </div>
+
+            <NAV class="hidden md:flex absolute left-1/2 transform -translate-x-1/2 text-sm font-semibold">
+                <ul class="flex space-x-4">
+                    <li onclick="scrollToTop()" class="hover:text-[#2986FE] duration-200 ease-in-out cursor-pointer px-2 py-1 w-20 text-center font-normal rounded-xl">Home</li>
+  
+                    <!-- Explore NAV -->
+                    <li class="relative">
+                        <button class="cursor-pointer flex items-center justify-center hover:text-[#2986FE] px-2 py-1 rounded-xl font-normal duration-200 ease-linear w-20 text-center" onclick="toggleDropdown('exploreDropdown', event)">Explore <span>
+                            <svg class="arrowDown" xmlns="http://www.w3.org/2000/svg" width="16" height="7" viewBox="0 0 16 7">
+                            <path fill="currentColor" d="M8 6.5a.47.47 0 0 1-.35-.15l-4.5-4.5c-.2-.2-.2-.51 0-.71s.51-.2.71 0l4.15 4.15l4.14-4.14c.2-.2.51-.2.71 0s.2.51 0 .71l-4.5 4.5c-.1.1-.23.15-.35.15Z" />
+                        </svg></span></button>
+                        <ul id="exploreDropdown" class="hidden absolute bg-[#F9F9FB] shadow-xl rounded-lg w-max top-[35px]">
+                            <li class="hover:bg-[#E4E7EC] duration-200 ease-linear px-4 py-2 hover:rounded-t-lg font-normal"><a href="attractions.html">Attractions</a></li>
+                            <li class="hover:bg-[#E4E7EC] duration-200 ease-linear px-4 py-2 font-normal"><a href="activities.html">Activities</a></li>
+                            <li class="hover:bg-[#E4E7EC] duration-200 ease-linear px-4 py-2 hover:rounded-b-lg font-normal"><a href="localfoods.html">Local Foods</a></li>
+                        </ul>
+                    </li>
+  
+                    <!-- Trips NAV -->
+                    <li class="relative group">
+                        <button class="cursor-pointer flex items-center justify-center hover:text-[#2986FE] px-2 font-normal py-1 rounded-xl duration-200 ease-linear w-20 text-center" onclick="toggleDropdown('tripsDropdown', event)">Trips <span><svg class="arrowDown" xmlns="http://www.w3.org/2000/svg" width="16" height="7" viewBox="0 0 16 7">
+                            <path fill="currentColor" d="M8 6.5a.47.47 0 0 1-.35-.15l-4.5-4.5c-.2-.2-.2-.51 0-.71s.51-.2.71 0l4.15 4.15l4.14-4.14c.2-.2.51-.2.71 0s.2.51 0 .71l-4.5 4.5c-.1.1-.23.15-.35.15Z" />
+                        </svg></span></button>
+                        <ul id="tripsDropdown" class="hidden absolute bg-[#F9F9FB] shadow-xl rounded-lg w-max top-[35px]">
+                            <li class="hover:bg-[#E4E7EC] duration-200 ease-linear px-4 py-2 hover:rounded-t-lg font-normal"><a href="#">View my trips</a></li>
+                            <li class="hover:bg-[#E4E7EC] duration-200 ease-linear px-4 py-2 font-normal"><a href="#">Create your own itinerary</a></li>
+                            <li class="hover:bg-[#E4E7EC] duration-200 ease-linear px-4 py-2 hover:rounded-b-lg font-normal"><a href="#">Create itinerary with us</a></li>
+                        </ul>
+                    </li>
+  
+                    <!-- Services NAV -->
+                    <li class="relative">
+                        <button class="cursor-pointer flex items-center justify-center hover:text-[#2986FE] px-2 py-1 font-normal rounded-xl duration-200 ease-linear w-20 text-center" onclick="toggleDropdown('servicesDropdown', event)">Services <span><svg class="arrowDown" xmlns="http://www.w3.org/2000/svg" width="16" height="7" viewBox="0 0 16 7">
+                            <path fill="currentColor" d="M8 6.5a.47.47 0 0 1-.35-.15l-4.5-4.5c-.2-.2-.2-.51 0-.71s.51-.2.71 0l4.15 4.15l4.14-4.14c.2-.2.51-.2.71 0s.2.51 0 .71l-4.5 4.5c-.1.1-.23.15-.35.15Z" />
+                        </svg></span></button>
+                        <ul id="servicesDropdown" class="hidden absolute bg-[#F9F9FB] shadow-xl rounded-lg w-max top-[35px]">
+                            <li class="hover:bg-[#E4E7EC] duration-200 ease-linear px-4 py-2 hover:rounded-t-lg font-normal"><a href="#">View my bookings</a></li>
+                            <li class="hover:bg-[#E4E7EC] duration-200 ease-linear px-4 py-2 hover:rounded-b-lg font-normal"><a href="#">Car rental</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </NAV>
+  
+<!-- LOGIN -->
+<div class="hidden md:flex items-center space-x-3 text-sm font-semibold justify-center cursor-pointer">
+    <input type="search" placeholder="Search..." class="md:hidden lg:block border p-1 outline-none focus:outline-none focus:ring-2 focus:ring-[#2986FE] duration-300 ease-in-out rounded-md font-normal">
+
+    <ul>
+        <li class="relative">
+            <div class="flex justify-evenly items-center">
+                <button id="nameDropdownBtn" class="font-normal cursor-pointer rounded-[99px] duration-200 ease-linear px-2 py-0.5 flex items-center" onclick="toggleDropdownName('nameDropdown', event)">John
+                    <span class="text-[10px]">                            <svg class="arrowDown" xmlns="http://www.w3.org/2000/svg" width="16" height="7" viewBox="0 0 16 7">
+                        <path fill="currentColor" d="M8 6.5a.47.47 0 0 1-.35-.15l-4.5-4.5c-.2-.2-.2-.51 0-.71s.51-.2.71 0l4.15 4.15l4.14-4.14c.2-.2.51-.2.71 0s.2.51 0 .71l-4.5 4.5c-.1.1-.23.15-.35.15Z" />
+                    </svg></span>
+                </button>
+            </div>
+
+            <ul id="nameDropdown" class="hidden absolute bg-white shadow-xl rounded-lg w-[200px] left-[-101px] top-[30px]">
+                <div class="mb-4">
+                    <img src="defaultPFP.png" alt="defaultPFP" class="w-[55px] rounded-[99px] m-auto mb-3 mt-3">
+                    <h1 class="font-medium text-center">John Doe</h1>
+                </div>
+                <div class="flex font-normal h-fit items-center px-2 py-0.5 hover:bg-[#E4E7EC] duration-200 ease-linear">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 27 27" >
+                        <path fill="#0e1111" d="M13 0C5.925 0 0 5.08 0 11.5c0 3.03 1.359 5.748 3.5 7.781a6.7 6.7 0 0 1-1.094 1.875A16.5 16.5 0 0 1 .375 23.22A1 1 0 0 0 1 25c2.215 0 3.808-.025 5.25-.406c1.29-.342 2.399-1.058 3.531-2.063c1.03.247 2.093.469 3.219.469c7.075 0 13-5.08 13-11.5S20.075 0 13 0m0 2c6.125 0 11 4.32 11 9.5S19.125 21 13 21c-1.089 0-2.22-.188-3.25-.469a1 1 0 0 0-.938.25c-1.125 1.079-1.954 1.582-3.062 1.875c-.51.135-1.494.103-2.188.157c.14-.158.271-.242.407-.407c.786-.96 1.503-1.975 1.719-3.125a1 1 0 0 0-.344-.937C3.249 16.614 2 14.189 2 11.5C2 6.32 6.875 2 13 2m-1.906 3.906a1 1 0 0 0-.469.25l-1.5 1.407l1.344 1.468l1.187-1.125h2.406L15 8.97v1.469l-2.563 1.718A1 1 0 0 0 12 13v2h2v-1.438l2.563-1.718A1 1 0 0 0 17 11V8.594a1 1 0 0 0-.25-.656l-1.5-1.688a1 1 0 0 0-.75-.344h-3.188a1 1 0 0 0-.218 0M12 16v2h2v-2z" />
+                    </svg>
+                    <li class="px-4 py-2"><a href="#">How it works</a></li>
+                </div>
+                <div class="flex font-normal h-fit items-center px-2 py-0.5 hover:bg-[#E4E7EC] duration-200 ease-linear">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 32 32">
+                        <path fill="#0e1111" d="M27 16.76v-1.53l1.92-1.68A2 2 0 0 0 29.3 11l-2.36-4a2 2 0 0 0-1.73-1a2 2 0 0 0-.64.1l-2.43.82a11 11 0 0 0-1.31-.75l-.51-2.52a2 2 0 0 0-2-1.61h-4.68a2 2 0 0 0-2 1.61l-.51 2.52a11.5 11.5 0 0 0-1.32.75l-2.38-.86A2 2 0 0 0 6.79 6a2 2 0 0 0-1.73 1L2.7 11a2 2 0 0 0 .41 2.51L5 15.24v1.53l-1.89 1.68A2 2 0 0 0 2.7 21l2.36 4a2 2 0 0 0 1.73 1a2 2 0 0 0 .64-.1l2.43-.82a11 11 0 0 0 1.31.75l.51 2.52a2 2 0 0 0 2 1.61h4.72a2 2 0 0 0 2-1.61l.51-2.52a11.5 11.5 0 0 0 1.32-.75l2.42.82a2 2 0 0 0 .64.1a2 2 0 0 0 1.73-1l2.28-4a2 2 0 0 0-.41-2.51ZM25.21 24l-3.43-1.16a8.9 8.9 0 0 1-2.71 1.57L18.36 28h-4.72l-.71-3.55a9.4 9.4 0 0 1-2.7-1.57L6.79 24l-2.36-4l2.72-2.4a8.9 8.9 0 0 1 0-3.13L4.43 12l2.36-4l3.43 1.16a8.9 8.9 0 0 1 2.71-1.57L13.64 4h4.72l.71 3.55a9.4 9.4 0 0 1 2.7 1.57L25.21 8l2.36 4l-2.72 2.4a8.9 8.9 0 0 1 0 3.13L27.57 20Z" />
+                        <path fill="#0e1111" d="M16 22a6 6 0 1 1 6-6a5.94 5.94 0 0 1-6 6m0-10a3.91 3.91 0 0 0-4 4a3.91 3.91 0 0 0 4 4a3.91 3.91 0 0 0 4-4a3.91 3.91 0 0 0-4-4" />
+                    </svg>
+                    <li class="px-4 py-2"><a href="#">Settings</a></li>
+                </div>
+                <div class="flex font-normal h-fit items-center px-2 py-0.5 text-[#C0000A] hover:bg-red-500 duration-200 ease-linear">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24">
+                        <g fill="none" stroke="#C0000A" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                            <path d="M14 8V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2v-2" />
+                            <path d="M9 12h12l-3-3m0 6l3-3" />
+                        </g>
+                    </svg>
+                    <li class="px-4 py-2"><a href="#">Log out</a></li>
+                </div>
+            </ul>
+        </li>
+    </ul>
+</div>
+  
+            <!-- Mobile Menu Button(Para Sidebar) -->
+            <button class="md:hidden text-2xl hover:text-[#2986FE] duration-200 ease-linear" onclick="toggleMenu()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path fill="#101010" d="M4 6a1 1 0 0 1 1-1h14a1 1 0 1 1 0 2H5a1 1 0 0 1-1-1m0 12a1 1 0 0 1 1-1h14a1 1 0 1 1 0 2H5a1 1 0 0 1-1-1m7-7a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2z" />
+                </svg>
+            </button>
+  
+            <!-- Sidebar (Hidden) -->
+            <div id="mobileSidebar" class="fixed top-0 left-0 w-full h-full bg-white transform translate-x-full transition-transform duration-200 ease-linear z-50">
+                <div class="p-5 flex justify-between items-center">
+                    <div class="flex items-center">
+                        <img src="logo.png" alt="logo" class="w-10">
+                        <h1 class="text-[20px] font-medium cursor-pointer"><a href="landing.html">Vigenture</a></h1>
+                    </div>
+                    <button onclick="toggleMenu()" class="text-[25px] hover:rotate-90 duration-200 ease-linear hover:text-[#C0000A]"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path fill="#101010" d="M18.3 5.71a.996.996 0 0 0-1.41 0L12 10.59L7.11 5.7A.996.996 0 1 0 5.7 7.11L10.59 12L5.7 16.89a.996.996 0 1 0 1.41 1.41L12 13.41l4.89 4.89a.996.996 0 1 0 1.41-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4" />
+                    </svg></button>
+                </div>
+
+                <ul class="mt-5 space-y-10 px-5">
+                    <li>
+                        <button onclick="toggleDropdown('mobileExploreDropdown')" class="w-full flex items-center text-left text-[16px] hover:text-[#366FD7] duration-200 ease-linear font-normal">Explore <span>
+                            <svg class="arrowDown" xmlns="http://www.w3.org/2000/svg" width="16" height="7" viewBox="0 0 16 7">
+                            <path fill="currentColor" d="M8 6.5a.47.47 0 0 1-.35-.15l-4.5-4.5c-.2-.2-.2-.51 0-.71s.51-.2.71 0l4.15 4.15l4.14-4.14c.2-.2.51-.2.71 0s.2.51 0 .71l-4.5 4.5c-.1.1-.23.15-.35.15Z" />
+                        </svg></span></button>
+                        <ul id="mobileExploreDropdown" class="hidden space-y-2 bg-[#E4E7EC] rounded-md">
+                            <li><a href="attractions.html" class="block hover:bg-gray-300 rounded-t-md py-2 px-2 duration-200 ease-linear">Attractions</a></li>
+                            <li><a href="activities.html" class="block hover:bg-gray-300 py-2 px-2 duration-200 ease-in-out">Activities</a></li>
+                            <li><a href="localfoods.html" class="block hover:bg-gray-300 rounded-b-md py-2 px-2 duration-300 ease-in-out">Local Foods</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <button onclick="toggleDropdown('mobileTripsDropdown')" class="w-full flex items-center text-left text-[16px] hover:text-[#366FD7] duration-200 ease-linear font-normal">Trips <span><svg class="arrowDown" xmlns="http://www.w3.org/2000/svg" width="16" height="7" viewBox="0 0 16 7">
+                            <path fill="currentColor" d="M8 6.5a.47.47 0 0 1-.35-.15l-4.5-4.5c-.2-.2-.2-.51 0-.71s.51-.2.71 0l4.15 4.15l4.14-4.14c.2-.2.51-.2.71 0s.2.51 0 .71l-4.5 4.5c-.1.1-.23.15-.35.15Z" />
+                        </svg></span></button>
+                        <ul id="mobileTripsDropdown" class="hidden space-y-2 border bg-[#E4E7EC] rounded-md">
+                            <li><a href="#" class="block hover:bg-gray-300 rounded-t-md py-2 px-2 duration-200 ease-linear">View my trips</a></li>
+                            <li><a href="#" class="block hover:bg-gray-300 py-2 px-2 duration-200 ease-linear">Create your own itinerary</a></li>
+                            <li><a href="#" class="block hover:bg-gray-300 rounded-b-md py-2 px-2 duration-200 ease-linear">Create itinerary with us</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <button onclick="toggleDropdown('mobileServicesDropdown')" class="w-full flex items-center text-left text-[16px] hover:text-[#366FD7] duration-200 ease-linear font-normal ">Services <span><svg class="arrowDown" xmlns="http://www.w3.org/2000/svg" width="16" height="7" viewBox="0 0 16 7">
+                            <path fill="currentColor" d="M8 6.5a.47.47 0 0 1-.35-.15l-4.5-4.5c-.2-.2-.2-.51 0-.71s.51-.2.71 0l4.15 4.15l4.14-4.14c.2-.2.51-.2.71 0s.2.51 0 .71l-4.5 4.5c-.1.1-.23.15-.35.15Z" />
+                        </svg></span></button>
+                        <ul id="mobileServicesDropdown" class="hidden space-y-2 border bg-[#E4E7EC] rounded-md">
+                            <li><a href="#" class="block hover:bg-gray-300 rounded-t-md py-2 px-2 duration-200 ease-linear">View my bookings</a></li>
+                            <li><a href="#" class="block hover:bg-gray-300 rounded-b-md py-2 px-2 duration-200 ease-linear">Car rental</a></li>
+                        </ul>
+                    </li>
+                    <hr>
+                    <li>
+                        <a href="how.html">
+                            <button class="w-full flex items-center text-left text-[16px] hover:text-[#366FD7] duration-200 ease-linear font-normal "><span class="mr-1.5">                                      <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 27 27" >
+                                <path fill="#0e1111" d="M13 0C5.925 0 0 5.08 0 11.5c0 3.03 1.359 5.748 3.5 7.781a6.7 6.7 0 0 1-1.094 1.875A16.5 16.5 0 0 1 .375 23.22A1 1 0 0 0 1 25c2.215 0 3.808-.025 5.25-.406c1.29-.342 2.399-1.058 3.531-2.063c1.03.247 2.093.469 3.219.469c7.075 0 13-5.08 13-11.5S20.075 0 13 0m0 2c6.125 0 11 4.32 11 9.5S19.125 21 13 21c-1.089 0-2.22-.188-3.25-.469a1 1 0 0 0-.938.25c-1.125 1.079-1.954 1.582-3.062 1.875c-.51.135-1.494.103-2.188.157c.14-.158.271-.242.407-.407c.786-.96 1.503-1.975 1.719-3.125a1 1 0 0 0-.344-.937C3.249 16.614 2 14.189 2 11.5C2 6.32 6.875 2 13 2m-1.906 3.906a1 1 0 0 0-.469.25l-1.5 1.407l1.344 1.468l1.187-1.125h2.406L15 8.97v1.469l-2.563 1.718A1 1 0 0 0 12 13v2h2v-1.438l2.563-1.718A1 1 0 0 0 17 11V8.594a1 1 0 0 0-.25-.656l-1.5-1.688a1 1 0 0 0-.75-.344h-3.188a1 1 0 0 0-.218 0M12 16v2h2v-2z" />
+                            </svg> </span> How it works</button>   
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <button class="w-full flex items-center text-left text-[16px] hover:text-[#366FD7] duration-200 ease-linear font-normal "><span class="mr-1.5">                   <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 32 32">
+                                <path fill="#0e1111" d="M27 16.76v-1.53l1.92-1.68A2 2 0 0 0 29.3 11l-2.36-4a2 2 0 0 0-1.73-1a2 2 0 0 0-.64.1l-2.43.82a11 11 0 0 0-1.31-.75l-.51-2.52a2 2 0 0 0-2-1.61h-4.68a2 2 0 0 0-2 1.61l-.51 2.52a11.5 11.5 0 0 0-1.32.75l-2.38-.86A2 2 0 0 0 6.79 6a2 2 0 0 0-1.73 1L2.7 11a2 2 0 0 0 .41 2.51L5 15.24v1.53l-1.89 1.68A2 2 0 0 0 2.7 21l2.36 4a2 2 0 0 0 1.73 1a2 2 0 0 0 .64-.1l2.43-.82a11 11 0 0 0 1.31.75l.51 2.52a2 2 0 0 0 2 1.61h4.72a2 2 0 0 0 2-1.61l.51-2.52a11.5 11.5 0 0 0 1.32-.75l2.42.82a2 2 0 0 0 .64.1a2 2 0 0 0 1.73-1l2.28-4a2 2 0 0 0-.41-2.51ZM25.21 24l-3.43-1.16a8.9 8.9 0 0 1-2.71 1.57L18.36 28h-4.72l-.71-3.55a9.4 9.4 0 0 1-2.7-1.57L6.79 24l-2.36-4l2.72-2.4a8.9 8.9 0 0 1 0-3.13L4.43 12l2.36-4l3.43 1.16a8.9 8.9 0 0 1 2.71-1.57L13.64 4h4.72l.71 3.55a9.4 9.4 0 0 1 2.7 1.57L25.21 8l2.36 4l-2.72 2.4a8.9 8.9 0 0 1 0 3.13L27.57 20Z" />
+                                <path fill="#0e1111" d="M16 22a6 6 0 1 1 6-6a5.94 5.94 0 0 1-6 6m0-10a3.91 3.91 0 0 0-4 4a3.91 3.91 0 0 0 4 4a3.91 3.91 0 0 0 4-4a3.91 3.91 0 0 0-4-4" />
+                            </svg> </span> Settings</button>
+                        </a>
+                    </li>
+                </ul>
+  
+                <div class="absolute bottom-10 left-0 right-0 px-5 flex flex-col space-y-3">
+                    <p  class="block cursor-pointer text-center bg-[#C0000A] hover:bg-red-500 text-white border py-2 rounded-md font-semibold transition duration-200 ease-linear">
+                        Log Out
+                    </p>
+                </div>
+  
+  
+            </div>
+  
+            <!-- Overlay (Click to Close Sidebar) -->
+            <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40" onclick="toggleMenu()"></div>
+  
+        </div>
+    </header>
+
+
+
+
+    <!-- Hero Section -->
+    <section class="2xl:w-[63%] m-auto">
+        <div class="mt-20 md:h-[600px]">
+        <div class="relative h-full w-[95%] m-auto overflow-hidden">
+    
+    
+            <div class="md:absolute md:left-10 lg:left-32 md:bottom-[160px] left-5 bottom-5 relative z-10">
+                <p class="text-[16px] md:text-[18px] mt-10 font-normal">ELEVATE YOUR TRAVEL EXPERIENCE</p>
+                <h1 class="text-[38px] md:text-[48px] font-medium leading-tight">Experience<br> The Beauty Of <br>Metro Vigan!</h1>
+                <div class="flex md:flex-row items-start md:items-center space-x-5 mt-10 gap-y-4">
+                    <a href="own.html">
+                    <button class="bg-[#2986FE] hover:bg-[#1F6FD1] duration-200 ease-linear h-[45px] px-6 rounded-[30px] text-white font-medium">
+                        Start A Trip Now
+                    </button>
+                </a>
+                    <button class="bg-[#F9F9FB] md:bg-white h-[45px] w-[45px] flex justify-center items-center rounded-[99px] group">
+                        <svg class="text-white group-hover:scale-110 duration-200 ease-linear" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14">
+                            <path fill="currentColor" stroke="#2986FE" stroke-linecap="round" stroke-linejoin="round"
+                                d="M1.436 12.33a1.14 1.14 0 0 0 .63 1a1.24 1.24 0 0 0 1.22 0l8.65-5.35a1.11 1.11 0 0 0 0-2L3.286.67a1.24 1.24 0 0 0-1.22 0a1.14 1.14 0 0 0-.63 1z"
+                                stroke-width="1.2" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+    
+            <img src="banner.jpg" alt="Banner" class="w-[90%] m-auto sm:mt-6 md:mt-0 md:w-full h-full object-cover rounded-[30px] ">
+    
+    
+      
+            <div class="sm:flex-col-reverse sm:flex md:block md:absolute md:right-0 md:bottom-0 relative mt-10 md:mt-0">
+                <div class="pl-0 md:pl-8 rounded-tl-[30px] bg-white w-fit relative  md:ml-[100px] cursor-pointer group">
+                    <h3 class="flex items-center bg-none md:bg-[#F9F9FB] relative top-5 z-10 font-medium px-9 py-5 rounded-tl-[30px] text-[16px] md:text-[18px]">
+                        <a href="knowMore.html" class="md:border md:border-[#F9F9FB]  flex items-center px-3 group-hover:border-b-black duration-200 ease-linear">Know More
+                            <span class="ml-5 group-hover:translate-x-2.5 duration-200 ease-linear">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                    <g fill="none" stroke="#101010" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                        <path stroke-dasharray="20" stroke-dashoffset="20" d="M3 12h17.5">
+                                            <animate fill="freeze" attributeName="stroke-dashoffset" dur="0.2s" values="20;0" />
+                                        </path>
+                                        <path stroke-dasharray="12" stroke-dashoffset="12" d="M21 12l-7 7M21 12l-7 -7">
+                                            <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.2s" dur="0.2s" values="12;0" />
+                                        </path>
+                                    </g>
+                                </svg>
+                            </span>
+                        </a>
+
+                    </h3>
+                </div>
+                <div class="pl-2 md:pl-8 pt-5 rounded-tl-[30px] z-0 bg-none md:bg-white rounded-br-[30px]">
+                    <div class="flex bg-none md:bg-[#F9F9FB] rounded-br-[28px] rounded-tl-[30px] py-1">
+                        <div class="relative flex items-center -space-x-2.5 px-2">
+                            <img src="3.1.jpg" alt="" class="w-12 h-12 rounded-[99px] border-[3px] border-white">
+                            <img src="3.1.jpg" alt="" class="w-12 h-12 rounded-[99px] border-[3px] border-white">
+                            <img src="3.1.jpg" alt="" class="w-12 h-12 rounded-[99px] border-[3px] border-white">
+                        </div>
+                        <div class="px-3 -space-y-1.5">
+                            <h5 class="text-[12px] md:text-[14px] font-medium">Awesome Places</h5>
+                            <p class="text-[12px] md:text-[14px] py-1 text-[#5F7281] font-light">Discover Metro<br> Vigan At A Time!</p>
+                        </div>
+                    </div>
+                </div>
+    
+    
+    
+        </div>
+    </section>
+    
+    
+    
+    
+    
+
+    <!-- LINKS -->
+    <section class="w-[95%] lg:w-[85%] 2xl:w-[60%] m-auto mt-16 flex md:justify-between items-center flex-wrap sm:justify-evenly ">
+        <div class="border border-[#5F7281] w-fit flex space-x-16 px-10 h-[80px] rounded-[99px] items-center">
+             <div>
+                <p class="text-[16px] md:text-[18px]">Follow Us</p>
+             </div>
+             <div class="flex space-x-4 items-center">
+                <a href="https://www.facebook.com/VCCATO" target="_blank"><img src="facebook.png" alt="" class="w-[20px] h-[20px] hover:scale-110 duration-200 ease-linear"></a>
+                <a href="https://www.facebook.com/VCCATO" target="_blank"><img src="ig.png" alt="" class="w-[20px] h-[20px] hover:scale-110 duration-200 ease-linear"></a>
+                <a href="https://www.facebook.com/VCCATO" target="_blank"><img src="tik-tok.png" alt="" class="w-[20px] h-[20px] hover:scale-110 duration-200 ease-linear"></a>
+             </div>
+        </div>
+        
+        <div class="flex space-x-10">
+            <div class="text-[#8A9BA8] px-10">
+                <h1 class="text-[24px] md:text-[34px] text-center">1</h1>
+                <p class="text-[12px] md:text-[14px] font-normal">City</p>
+            </div>
+            <div class="text-[#8A9BA8] px-10">
+                <h1 class="text-[24px] md:text-[34px] text-center">4</h1>
+                <p class="text-[12px] md:text-[14px] font-normal">Municipalities</p>
+            </div>
+        </div>
+
+    </section>
+    
+    
+    
+    <!-- DESTINATIONS -->
+    <section class="w-[85%] lg:w-[85%] 2xl:w-[60%] h-fit pb-2 mt-24 m-auto overflow-hidden">
+        <div class=" m-auto">
+            <div class="flex justify-between items-center">
+                <div class="w-fit ">
+                    <h1 class="text-[28px] md:text-[34px] font-medium">Popular Destinations</h1>
+                    <p class="text-[12px] md:text-[14px] text-[#5F7281]">Unleash Your Travel Side With Vigenture</p>
+                </div>
+                <div class="flex space-x-1 md:space-x-3">
+                    <button onclick="previous()" class="bg-[#101010] text-white active:scale-75 hover:bg-[#5F7281] duration-200 ease-linear h-[45px] w-[45px] md:h-[55px] md:w-[55px] flex items-center justify-center rounded-[99px]">
+                        <svg class="rotate-180" xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M9.31 6.71a.996.996 0 0 0 0 1.41L13.19 12l-3.88 3.88a.996.996 0 1 0 1.41 1.41l4.59-4.59a.996.996 0 0 0 0-1.41L10.72 6.7c-.38-.38-1.02-.38-1.41.01" />
+                        </svg>
+                    </button>
+                    <button onclick="next()" class="bg-[#101010] text-white active:scale-75 hover:bg-[#5F7281] duration-200 ease-linear h-[45px] w-[45px] md:h-[55px] md:w-[55px] flex items-center justify-center rounded-[99px]">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M9.31 6.71a.996.996 0 0 0 0 1.41L13.19 12l-3.88 3.88a.996.996 0 1 0 1.41 1.41l4.59-4.59a.996.996 0 0 0 0-1.41L10.72 6.7c-.38-.38-1.02-.38-1.41.01" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-10 relative">
+            <div id="destination-container" class="flex px-2 transition-transform py-2 duration-500 gap-11 md:gap-16 lg:gap-[50px] w-full">
+        
+                    <!-- locations -->
+                    <a href="location.html" class="hover:bg-[#F9F9FB] group hover:shadow-md hover:scale-[1.02] duration-200 ease-linear rounded-[10px] md:rounded-[20px] px-2 ">
+                        <div class="w-fit py-2">
+                            <div class="w-[280px] h-[180px] md:w-[300px] md:h-[200px] relative overflow-hidden rounded-[20px]">
+                                <img src="banner.jpg" alt="Calle" class="w-full h-full object-cover rounded-[20px] group-hover:scale-105 duration-200 ease-linear">
+                            </div>
+                            <div class="mt-3 m-auto">
+                                <h1 class="text-[16px] md:text-[18px] font-medium px-4">Calle Crisologo</h1>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center text-[#5F7281] px-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                            <path fill="#5F7281" d="M12 11.5A2.5 2.5 0 0 1 9.5 9A2.5 2.5 0 0 1 12 6.5A2.5 2.5 0 0 1 14.5 9a2.5 2.5 0 0 1-2.5 2.5M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7" />
+                                        </svg>
+                                        <p class=" text-[12px] md:text-[14px]">Vigan City</p>
+                                    </div>
+                                    <div class="px-3">
+                                        <p class="bg-[#2986FE] text-white text-[12px] md:text-[14px] px-1.5 rounded-[99px]">Historical Landmark</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+
+                     <!-- locations -->
+                     <a href="location.html" class="hover:bg-[#F9F9FB] group hover:shadow-md hover:scale-[1.02] duration-200 ease-linear rounded-[10px] md:rounded-[20px] px-2 ">
+                        <div class="w-fit py-2">
+                            <div class="w-[280px] h-[180px] md:w-[300px] md:h-[200px] relative overflow-hidden rounded-[20px]">
+                                <img src="banner.jpg" alt="Calle" class="w-full h-full object-cover rounded-[20px] group-hover:scale-105 duration-200 ease-linear">
+                            </div>
+                            <div class="mt-3 m-auto">
+                                <h1 class="text-[16px] md:text-[18px] font-medium px-4">Syquia Mansion Museum</h1>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center text-[#5F7281] px-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                            <path fill="#5F7281" d="M12 11.5A2.5 2.5 0 0 1 9.5 9A2.5 2.5 0 0 1 12 6.5A2.5 2.5 0 0 1 14.5 9a2.5 2.5 0 0 1-2.5 2.5M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7" />
+                                        </svg>
+                                        <p class=" text-[12px] md:text-[14px]">Vigan City</p>
+                                    </div>
+                                    <div class="px-3">
+                                        <p class="bg-[#2986FE] text-white text-[12px] md:text-[14px] px-1.5 rounded-[99px]">Museum Tour</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+
+                    <!-- locations -->
+                    <a href="location.html" class="hover:bg-[#F9F9FB] group hover:shadow-md hover:scale-[1.02] duration-200 ease-linear rounded-[10px] md:rounded-[20px] px-2 ">
+                        <div class="w-fit py-2">
+                            <div class="w-[280px] h-[180px] md:w-[300px] md:h-[200px] relative overflow-hidden rounded-[20px]">
+                                <img src="banner.jpg" alt="Calle" class="w-full h-full object-cover rounded-[20px] group-hover:scale-105 duration-200 ease-linear">
+                            </div>
+                            <div class="mt-3 m-auto">
+                                <h1 class="text-[16px] md:text-[18px] font-medium px-4">Bell Tower</h1>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center text-[#5F7281] px-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                            <path fill="#5F7281" d="M12 11.5A2.5 2.5 0 0 1 9.5 9A2.5 2.5 0 0 1 12 6.5A2.5 2.5 0 0 1 14.5 9a2.5 2.5 0 0 1-2.5 2.5M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7" />
+                                        </svg>
+                                        <p class=" text-[12px] md:text-[14px]">Bantay</p>
+                                    </div>
+                                    <div class="px-3">
+                                        <p class="bg-[#2986FE] text-white text-[12px] md:text-[14px] px-1.5 rounded-[99px]">Historical Landmark</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- locations -->
+                    <a href="location.html" class="hover:bg-[#F9F9FB] group hover:shadow-md hover:scale-[1.02] duration-200 ease-linear rounded-[10px] md:rounded-[20px] px-2 ">
+                        <div class="w-fit py-2">
+                            <div class="w-[280px] h-[180px] md:w-[300px] md:h-[200px] relative overflow-hidden rounded-[20px]">
+                                <img src="banner.jpg" alt="Calle" class="w-full h-full object-cover rounded-[20px] group-hover:scale-105 duration-200 ease-linear">
+                            </div>
+                            <div class="mt-3 m-auto">
+                                <h1 class="text-[16px] md:text-[18px] font-medium px-4">Choco Surf Beach</h1>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center text-[#5F7281] px-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                            <path fill="#5F7281" d="M12 11.5A2.5 2.5 0 0 1 9.5 9A2.5 2.5 0 0 1 12 6.5A2.5 2.5 0 0 1 14.5 9a2.5 2.5 0 0 1-2.5 2.5M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7" />
+                                        </svg>
+                                        <p class=" text-[12px] md:text-[14px]">Caoayan</p>
+                                    </div>
+                                    <div class="px-3">
+                                        <p class="bg-[#2986FE] text-white text-[12px] md:text-[14px] px-1.5 rounded-[99px]">Nature Experience</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- locations -->
+                    <a href="location.html" class="hover:bg-[#F9F9FB] group hover:shadow-md hover:scale-[1.02] duration-200 ease-linear rounded-[10px] md:rounded-[20px] px-2 ">
+                        <div class="w-fit py-2">
+                            <div class="w-[280px] h-[180px] md:w-[300px] md:h-[200px] relative overflow-hidden rounded-[20px]">
+                                <img src="banner.jpg" alt="Calle" class="w-full h-full object-cover rounded-[20px] group-hover:scale-105 duration-200 ease-linear">
+                            </div>
+                            <div class="mt-3 m-auto">
+                                <h1 class="text-[16px] md:text-[18px] font-medium px-4">Sta. Catalina Paris Church</h1>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center text-[#5F7281] px-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                            <path fill="#5F7281" d="M12 11.5A2.5 2.5 0 0 1 9.5 9A2.5 2.5 0 0 1 12 6.5A2.5 2.5 0 0 1 14.5 9a2.5 2.5 0 0 1-2.5 2.5M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7" />
+                                        </svg>
+                                        <p class=" text-[12px] md:text-[14px]">Sta. Catalina</p>
+                                    </div>
+                                    <div class="px-3">
+                                        <p class="bg-[#2986FE] text-white text-[12px] md:text-[14px] px-1.5 rounded-[99px]">Cultural Experience</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>         
+
+                <!-- for fix mobile screen -->
+                <div class="sm:hidden md:flex md:w-[300px] md:h-[200px] relative text-[14px] md:text-[16px] items-center rounded-[20px]">
+                <a href="attractions.html" class="whitespace-nowrap border border-white hover:border-b-black duration-200 ease-linear px-3">View More</a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    
+    
+    
+
+    <!-- DIRECTIONS -->
+    <section class="w-[90%] lg:w-[85%] 2xl:w-[60%] h-fit lg:h-[500px] mt-24 m-auto"> 
+        <div class="w-full text-center">
+            <h1 class="text-[28px] md:text-[34px] font-medium">Journey To Metro Vigan Made Simple!</h1>
+            <p class="text-[12px] md:text-[14px] text-[#5F7281] w-[95%] md:w-[60%] lg:w-[35%] m-auto">Travelling Is A Wonderful Way To Explore New Places, Learn About New Culture, And Gain Unique Experience</p>
+        </div>
+
+        
+        <div class="lg:h-96 flex flex-wrap mt-8 justify-evenly h-fit">
+
+            <!-- create own -->
+            <div class="bg-[#F9F9FB] text-[#101010] lg:bg-[#F9F9FB] h-fit md:h-96 pb-3 lg:pb-0 mb-2 lg:mb-0  lg:h-[50%] overflow-hidden lg:mt-48 hover:border-r border-white hover:bg-[#2986FE] hover:text-white hover:mt-0 hover:h-full duration-200  ease-linear w-[100%] md:w-[48%] lg:m-0 lg:w-[33.3333333333%] rounded-[20px] lg:rounded-br-[0px]">
+                <div>
+                    <div class="p-3 bg-white w-fit rounded-[99px] mt-6 ml-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <path fill="#101010" d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5v2H5v14h14v-5z" />
+                            <path fill="#101010" d="M21 7h-4V3h-2v4h-4v2h4v4h2V9h4z" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="text-[16px] md:text-[18px] font-medium ml-6 mt-10">
+                    <h1>Create Your<br>Own Itinerary</h1>
+                </div>
+                <div class="ml-6 mr-6 mt-10">
+                    <p class="text-[12px] md:text-[14px] text-[#101010] lg:text-white">Take full control of your travel plans by creating a personalized itinerary that fits your schedule, interest s, and budget. Design the perfect journey, your way.</p>
+                </div>
+                <div>
+                    <a href="own.html" class="flex items-center mt-10 ml-6 group text-[#101010] lg:text-white text-[12px] md:text-[14px]">
+                        START NOW
+                        <span>
+                            <svg class="group-hover:translate-x-2 duration-300 ease-linear" xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M9.31 6.71a.996.996 0 0 0 0 1.41L13.19 12l-3.88 3.88a.996.996 0 1 0 1.41 1.41l4.59-4.59a.996.996 0 0 0 0-1.41L10.72 6.7c-.38-.38-1.02-.38-1.41.01" />
+                            </svg>
+                        </span>
+                    </a>
+                </div>
+            </div>
+
+
+
+            <!-- system generate -->
+            <div class="bg-[#2986FE] text-white h-fit lg:h-full pb-3 md:h-96 lg:pb-0 mb-2 lg:mb-0 duration-200  ease-linear w-[100%] lg:w-[33.3333333333%] rounded-[20px] lg:rounded-b-[0px] md:w-[48%]">
+                <div>
+                    <div class="p-3 bg-white w-fit rounded-[99px] mt-6 ml-6">
+                        <svg class="text-[#101010]" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 14 14">
+                            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M5.28 8.231H1.132a.49.49 0 0 0-.488.488v4.15c0 .27.219.488.488.488h4.15c.27 0 .488-.219.488-.488v-4.15a.49.49 0 0 0-.488-.488Zm7.589 0h-4.15a.49.49 0 0 0-.488.488v4.15c0 .27.218.488.488.488h4.15c.27 0 .488-.219.488-.488v-4.15a.49.49 0 0 0-.488-.488M5.28.643H1.132a.49.49 0 0 0-.488.488v4.15c0 .27.219.488.488.488h4.15c.27 0 .488-.219.488-.488V1.13a.49.49 0 0 0-.488-.488Zm2.866 2.941c-.301-.052-.301-.483 0-.536A2.72 2.72 0 0 0 10.337.95l.018-.083c.065-.297.488-.3.556-.003l.022.097a2.735 2.735 0 0 0 2.197 2.086c.302.052.302.486 0 .539a2.735 2.735 0 0 0-2.197 2.086l-.022.096c-.068.297-.49.295-.556-.002l-.018-.083a2.72 2.72 0 0 0-2.191-2.099" stroke-width="1" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="text-[16px] md:text-[18px] font-medium ml-6 mt-10">
+                    <h1>Plan With<br>Our System</h1>
+                </div>
+                <div class="ml-6 mr-6 mt-10">
+                    <p class="text-[12px] md:text-[14px] text-white">Use our intuitive platform to quickly plan and organize your trip with pre-designed options that suit your preferences. Let us guide you every step of the way!</p>
+                </div>
+                <div>
+                    <a href="system.html" class="flex items-center mt-10 ml-6 group text-white text-[12px] md:text-[14px]">
+                        START NOW
+                        <span>
+                            <svg class="group-hover:translate-x-2 duration-300 ease-linear" xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24">
+                                <path fill="white" d="M9.31 6.71a.996.996 0 0 0 0 1.41L13.19 12l-3.88 3.88a.996.996 0 1 0 1.41 1.41l4.59-4.59a.996.996 0 0 0 0-1.41L10.72 6.7c-.38-.38-1.02-.38-1.41.01" />
+                            </svg>
+                        </span>
+                    </a>
+                </div>
+            </div>
+
+
+            <!-- car rental -->
+            <div class=" text-[#101010] md:h-96 bg-[#F9F9FB] h-fit pb-3 lg:pb-0 mb-2 lg:mb-0  lg:h-[50%] overflow-hidden lg:mt-48 hover:border-l border-white hover:bg-[#2986FE] hover:text-white hover:mt-0 hover:h-full duration-200  ease-linear w-[100%] md:w-[48%] lg:w-[33.3333333333%] rounded-[20px] lg:rounded-bl-[0px]">
+                <div>
+                    <div class="p-3 bg-white w-fit rounded-[99px] mt-6 ml-6">
+                        <svg class="text-[#101010]" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M8 7q-1.25 0-2.125-.875T5 4t.875-2.125T8 1q.95 0 1.725.563T10.85 3H18q.425 0 .713.288T19 4q0 .4-.363.563T18 5v1q0 .425-.288.713T17 7t-.712-.288T16 6V5h-5.15q-.35.875-1.125 1.438T8 7m0-2q.425 0 .713-.288T9 4t-.288-.712T8 3t-.712.288T7 4t.288.713T8 5m1 12.5q.425 0 .713-.288T10 16.5t-.288-.712T9 15.5t-.712.288T8 16.5t.288.713T9 17.5m6 0q.425 0 .713-.288T16 16.5t-.288-.712T15 15.5t-.712.288T14 16.5t.288.713t.712.287M7 20v1q0 .425-.288.713T6 22t-.712-.288T5 21v-6.075q0-.175.025-.337t.075-.313l1.35-3.925q.2-.6.725-.975T8.35 9h7.3q.65 0 1.175.375t.725.975l1.35 3.925q.05.15.075.313t.025.337V21q0 .425-.287.713T18 22t-.712-.288T17 21v-1zm.65-7h8.7l-.7-2h-7.3zM7 15v3zm0 3h10v-3H7z" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="text-[16px] md:text-[18px] font-medium ml-6 mt-10">
+                    <h1>Rent A<br>Car With Us</h1>
+                </div>
+                <div class="ml-6 mr-6 mt-10">
+                    <p class="text-[12px] md:text-[14px] text-[#101010] lg:text-white">Choose from a wide range of vehicles for your trip. With our easy car rental service, you can enjoy the freedom to explore at your own pace, wherever you go.</p>
+                </div>
+                <div>
+                    <a href="car.html" class="flex items-center mt-10 ml-6 group text-[#101010] lg:text-white text-[12px] md:text-[14px]">
+                        START NOW
+                        <span>
+                            <svg class="group-hover:translate-x-2 duration-300 ease-linear" xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M9.31 6.71a.996.996 0 0 0 0 1.41L13.19 12l-3.88 3.88a.996.996 0 1 0 1.41 1.41l4.59-4.59a.996.996 0 0 0 0-1.41L10.72 6.7c-.38-.38-1.02-.38-1.41.01" />
+                            </svg>
+                        </span>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+
+
+
+
+        <!-- MAP -->
+        <section class="w-[90%] lg:w-[90%] 2xl:w-[60%] h-fit lg:h-[500px] mt-24 m-auto"> 
+            <div class="w-full text-center">
+                <h1 class="text-[28px] md:text-[34px] font-medium">Metro Vigan Map</h1>
+                <p class="text-[12px] md:text-[14px] text-[#5F7281] w-[95%] md:w-[60%] lg:w-[35%] m-auto">Navigate The Heart Of Ilocandia — From Historic Streets To Modern Landmarks</p>
+            </div>
+            <div id="map" class="w-[95%] h-[380px] rounded-lg m-auto z-0 mt-8"></div>
+        </section>
+
+    
+
+    <!-- FOOTER -->
+    <footer class=" 2xl:w-[60%] mt-24 m-auto bg-[#F9F9FB] px-4">
+        <div class="flex flex-wrap">
+
+            <div class="w-full md:w-[33.3333333%] flex flex-col mb-10 md:mb-0">
+                <div class="m-auto">
+                    <div class="flex items-center mt-10">
+                        <img src="logo.png" alt="logo" class="w-14">
+                        <h1 class="text-[24px] md:text-[28px] font-medium cursor-pointer">Vigenture</h1>
+                    </div>
+                    <div>
+                        <p class="text-[16px] md:text-[18px] ml-14 text-[#5F7281]">For Explorers Everywhere</p>
+                    </div>
+                    <div class="mt-10 flex items-center ml-14 space-x-4">
+                        <a href="https://www.facebook.com/VCCATO" target="_blank"><img src="facebook.png" alt="" class="w-[35px] h-[35px] hover:scale-110 duration-200 ease-linear"></a>
+                        <a href="https://www.facebook.com/VCCATO" target="_blank"><img src="ig.png" alt="" class="w-[35px] h-[35px] hover:scale-110 duration-200 ease-linear"></a>
+                        <a href="https://www.facebook.com/VCCATO" target="_blank"><img src="tik-tok.png" alt="" class="w-[35px] h-[35px] hover:scale-110 duration-200 ease-linear"></a>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="w-[48%] md:w-[33.3333333%] flex flex-col items-center justify-center">
+                 <ul>
+                    <h1 class="text-[16px] md:text-[18px] font-medium mb-4">Company</h1>
+
+                    <li class="text-[12px] md:text-[14px] font-light"><a href="">About Us</a></li>
+                    <li class="text-[12px] md:text-[14px] font-light"><a href="">Car Providers</a></li>
+                    <li class="text-[12px] md:text-[14px] font-light"><a href="">Contact</a></li>
+
+                 </ul>                
+            </div>
+
+            <div class="w-[48%] md:w-[33.3333333%] flex flex-col items-center justify-center">
+                <ul>
+                   <h1 class="text-[16px] md:text-[18px] font-medium mb-4">Extra Links</h1>
+
+                   <li class="text-[12px] md:text-[14px] font-light"><a href="">Tourist Support</a></li>
+                   <li class="text-[12px] md:text-[14px] font-light"><a href="">Terms & Condition</a></li>
+                   <li class="text-[12px] md:text-[14px] font-light"><a href="">Privacy Policy</a></li>
+
+                </ul>                
+           </div>
+            
+        </div>
+
+        <div class="border-t border-[#5F7281] w-[90%] m-auto py-4 mt-32">
+            <h1 class="text-center text-[#5F7281] text-[12px] md:text-[14px]">© 2025 Vigenture. All Rights Reserved.</h1>
+        </div>
+    </footer>
+
+
+
+
+
+        <!-- MODAL -->
+        <div id="registerModal" class="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm flex items-center justify-center hidden">
+            <section class="h-fit lg:h-[500px] mt-24 m-auto"> 
+
+        
+                
+            <div class="bg-red-400 w-[70%] m-auto px-4 py-4">
+                <div class="lg:h-96 flex flex-wrap mt-8 justify-center items-center w-fit m-auto h-fit border border-red-500 bg-white rounded-[20px] overflow-hidden">
+        
+                    <!-- system generate -->
+                    <div class="bg-[#2986FE] text-white h-fit lg:h-full pb-3 md:h-96 lg:pb-0 mb-2 lg:mb-0 duration-200  ease-linear w-[100%] lg:w-[50%] rounded-[20px] lg:rounded-b-[0px] md:w-[48%]">
+                        <div>
+                            <div class="p-3 bg-white w-fit rounded-[99px] mt-6 ml-6">
+                                <svg class="text-[#101010]" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 14 14">
+                                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M5.28 8.231H1.132a.49.49 0 0 0-.488.488v4.15c0 .27.219.488.488.488h4.15c.27 0 .488-.219.488-.488v-4.15a.49.49 0 0 0-.488-.488Zm7.589 0h-4.15a.49.49 0 0 0-.488.488v4.15c0 .27.218.488.488.488h4.15c.27 0 .488-.219.488-.488v-4.15a.49.49 0 0 0-.488-.488M5.28.643H1.132a.49.49 0 0 0-.488.488v4.15c0 .27.219.488.488.488h4.15c.27 0 .488-.219.488-.488V1.13a.49.49 0 0 0-.488-.488Zm2.866 2.941c-.301-.052-.301-.483 0-.536A2.72 2.72 0 0 0 10.337.95l.018-.083c.065-.297.488-.3.556-.003l.022.097a2.735 2.735 0 0 0 2.197 2.086c.302.052.302.486 0 .539a2.735 2.735 0 0 0-2.197 2.086l-.022.096c-.068.297-.49.295-.556-.002l-.018-.083a2.72 2.72 0 0 0-2.191-2.099" stroke-width="1" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="text-[16px] md:text-[18px] font-medium ml-6 mt-10">
+                            <h1>Plan With<br>Our System</h1>
+                        </div>
+                        <div class="ml-6 mr-6 mt-10">
+                            <p class="text-[12px] md:text-[14px] text-white">Use our intuitive platform to quickly plan and organize your trip with pre-designed options that suit your preferences. Let us guide you every step of the way!</p>
+                        </div>
+                        <div>
+                            <a href="createOwn.html" class="flex items-center mt-10 ml-6 group text-white text-[12px] md:text-[14px]">
+                                START NOW
+                                <span>
+                                    <svg class="group-hover:translate-x-2 duration-300 ease-linear" xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24">
+                                        <path fill="white" d="M9.31 6.71a.996.996 0 0 0 0 1.41L13.19 12l-3.88 3.88a.996.996 0 1 0 1.41 1.41l4.59-4.59a.996.996 0 0 0 0-1.41L10.72 6.7c-.38-.38-1.02-.38-1.41.01" />
+                                    </svg>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+
+
+                    <!-- create own -->
+                    <div class="bg-[#2986FE] text-white lg:text-[#101010] lg:bg-[#F9F9FB] h-fit md:h-96 pb-3 lg:pb-0 mb-2 lg:mb-0  lg:h-[50%] overflow-hidden lg:mt-48 hover:border-l border-white hover:bg-[#2986FE] hover:text-white hover:mt-0 hover:h-full duration-200  ease-linear w-[100%] md:w-[48%] lg:m-0 lg:w-[50%] rounded-[20px] lg:rounded-b-[0px]">
+                        <div>
+                            <div class="p-3 bg-white w-fit rounded-[99px] mt-6 ml-6">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                    <path fill="#101010" d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5v2H5v14h14v-5z" />
+                                    <path fill="#101010" d="M21 7h-4V3h-2v4h-4v2h4v4h2V9h4z" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="text-[16px] md:text-[18px] font-medium ml-6 mt-10">
+                            <h1>Create Your<br>Own Itinerary</h1>
+                        </div>
+                        <div class="ml-6 mr-6 mt-10">
+                            <p class="text-[12px] md:text-[14px] text-white">Take full control of your travel plans by creating a personalized itinerary that fits your schedule, interest s, and budget. Design the perfect journey, your way.</p>
+                        </div>
+                        <div>
+                            <a href="createOwn.html" class="flex items-center mt-10 ml-6 group text-white text-[12px] md:text-[14px]">
+                                START NOW
+                                <span>
+                                    <svg class="group-hover:translate-x-2 duration-300 ease-linear" xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24">
+                                        <path fill="white" d="M9.31 6.71a.996.996 0 0 0 0 1.41L13.19 12l-3.88 3.88a.996.996 0 1 0 1.41 1.41l4.59-4.59a.996.996 0 0 0 0-1.41L10.72 6.7c-.38-.38-1.02-.38-1.41.01" />
+                                    </svg>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+        
+                </div>
+            </div>
+        
+        
+            </section>
+        </div>
+
+
+
+    <script>
+            // FUNCTION FOR NAVBAR DROPDOWN
+    document.addEventListener("DOMContentLoaded", function () {
+        const navButtons = document.querySelectorAll("nav ul li button"); 
+        const dropdowns = document.querySelectorAll("nav ul li ul"); 
+
+        navButtons.forEach(button => {
+            button.addEventListener("click", function (event) {
+                event.stopPropagation(); // Prevents click event from bubbling up
+
+                // Remove active state and rotation from all buttons
+                navButtons.forEach(btn => {
+                    btn.classList.remove("active");
+                    btn.style.backgroundColor = "";
+                    btn.style.color = "";
+                    const arrow = btn.querySelector(".arrowDown");
+                    if (arrow) arrow.classList.remove("rotate-180");
+                });
+
+                // Close all dropdowns
+                dropdowns.forEach(dropdown => {
+                    dropdown.classList.add("hidden");
+                });
+
+                // Toggle the corresponding dropdown menu
+                const dropdownId = this.getAttribute("onclick").match(/'([^']+)'/)[1]; 
+                const dropdownMenu = document.getElementById(dropdownId);
+
+                if (dropdownMenu.classList.contains("hidden")) {
+                    // Open: add styles and rotate arrow
+                    this.classList.add("active");
+                    this.style.backgroundColor = "#2986FE";
+                    this.style.color = "#fafafa";
+                    dropdownMenu.classList.remove("hidden");
+                    const arrow = this.querySelector(".arrowDown");
+                    if (arrow) arrow.classList.add("rotate-180");
+                }
+            });
+        });
+
+        // Click outside to close everything
+        document.addEventListener("click", function () {
+            navButtons.forEach(btn => {
+                btn.classList.remove("active");
+                btn.style.backgroundColor = "";
+                btn.style.color = "";
+                const arrow = btn.querySelector(".arrowDown");
+                if (arrow) arrow.classList.remove("rotate-180");
+            });
+
+            dropdowns.forEach(dropdown => {
+                dropdown.classList.add("hidden");
+            });
+        });
+    });
+
+
+
+
+    // FUNCTION FOR SIDEBAR NAV MENU(MOBILE VIEW)
+    function toggleMenu() {
+        const sidebar = document.getElementById("mobileSidebar");
+        const overlay = document.getElementById("overlay");
+        
+        const isOpen = sidebar.classList.contains("translate-x-0");
+
+        if (isOpen) {
+            sidebar.classList.add("translate-x-full");
+            sidebar.classList.remove("translate-x-0");
+            overlay.classList.add("hidden");
+        } else {
+            sidebar.classList.remove("translate-x-full");
+            sidebar.classList.add("translate-x-0");
+            overlay.classList.remove("hidden");
+        }
+    }
+
+
+    // FUNCTION FOR HOME NAV
+    function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    }
+
+
+
+
+
+    //FUNCTION FOR NAME DROPDOWN
+    function toggleDropdownName(dropdownId, event) {
+        event.stopPropagation();
+        
+        const dropdown = document.getElementById(dropdownId);
+        const button = document.getElementById("nameDropdownBtn");
+        const svg = button.querySelector(".arrowDown");
+
+        if (dropdown.classList.contains("hidden")) {
+            dropdown.classList.remove("hidden");
+            button.classList.add("bg-[#2986FE]", "text-white", "rounded-2xl");
+            svg.classList.add("rotate-180");
+        } else {
+            dropdown.classList.add("hidden");
+            button.classList.remove("bg-[#2986FE]", "text-white", "rounded-2xl");
+            svg.classList.remove("rotate-180");
+        }
+    }
+
+    // Close dropdown on outside click
+    document.addEventListener("click", function (event) {
+        const dropdown = document.getElementById("nameDropdown");
+        const button = document.getElementById("nameDropdownBtn");
+
+        // If dropdown is open and clicked outside both dropdown and button
+        if (!dropdown.classList.contains("hidden") && !button.contains(event.target)) {
+            dropdown.classList.add("hidden");
+            button.classList.remove("bg-[#2986FE]", "text-white", "rounded-2xl");
+            
+            const svg = button.querySelector(".arrowDown");
+            svg.classList.remove("rotate-180"); // reset arrow
+        }
+    });
+
+    
+
+
+
+
+
+// Close dropdown when clicking outside
+document.addEventListener("click", function () {
+    let dropdown = document.getElementById("nameDropdown");
+    let button = document.getElementById("nameDropdownBtn");
+
+    if (!dropdown.classList.contains("hidden")) {
+        dropdown.classList.add("hidden");
+        button.classList.remove("bg-[#2986FE]", "text-white", "rounded-2xl");
+    }
+});
+
+
+
+
+
+
+
+function toggleDropdown(dropdownId) {
+    const dropdown = document.getElementById(dropdownId);
+    const button = document.querySelector(`[onclick="toggleDropdown('${dropdownId}')"]`);
+    const arrow = button.querySelector(".arrowDown");
+
+    const allDropdowns = document.querySelectorAll("#mobileSidebar ul ul");
+    const allArrows = document.querySelectorAll("#mobileSidebar .arrowDown");
+
+    allDropdowns.forEach(d => {
+        if (d.id !== dropdownId) d.classList.add("hidden");
+    });
+
+    allArrows.forEach(a => {
+        a.classList.remove("rotate-180");
+    });
+
+    dropdown.classList.toggle("hidden");
+    arrow.classList.toggle("rotate-180");
+
+    // Remove previous listener to avoid duplicates
+    document.removeEventListener("click", handleOutsideClick);
+
+    // Add a short timeout to avoid immediate closing from the same click
+    setTimeout(() => {
+        document.addEventListener("click", handleOutsideClick);
+    }, 0);
+
+    function handleOutsideClick(e) {
+        if (!dropdown.contains(e.target) && !button.contains(e.target)) {
+            dropdown.classList.add("hidden");
+            arrow.classList.remove("rotate-180");
+            document.removeEventListener("click", handleOutsideClick);
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+    <script>
+         //FUNCTION FOR CAROUSEL 
+ let currentIndex = 0;
+ const container = document.getElementById('destination-container');
+ const cardWidth = 250; // Approximate width of one card including margin (adjust if needed)
+ const totalCards = container.children.length;
+ const maxIndex = totalCards - 1;
+
+ function next() {
+     if (currentIndex < maxIndex) {
+         currentIndex++;
+         updateScroll();
+     }
+ }
+
+ function previous() {
+     if (currentIndex > 0) {
+         currentIndex--;
+         updateScroll();
+     }
+ }
+
+ function updateScroll() {
+     container.style.transform = `translateX(-${cardWidth * currentIndex}px)`;
+ }
+
+
+
+
+
+
+
+ // FOR MAP MARKERS
+let map = L.map('map');
+map.setView([17.574975, -239.613018], 14);
+
+
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+maxZoom: 19,
+attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+}).addTo(map);
+
+
+
+let calleCrisologoMarker = L.marker([17.56891, -239.611961]).addTo(map)
+    .bindPopup("<b>Calle Crisologo")
+    .openPopup();
+
+
+    </script>
+
+
+
+    <script>
+        // Location data - you would normally fetch this from a database
+  const locationData = {
+      "Syquia Mansion Museum": {
+          name: "Syquia Mansion Museum",
+          description: "The Syquia Mansion Museum is a historical house museum in Vigan City, Ilocos Sur. Built in the 1830s, it was the home of President Elpidio Quirino and his wife, Alicia Syquia. The mansion features period furniture, art, and memorabilia that showcase the lifestyle of affluent Filipino families during the Spanish colonial period.",
+          coordinates: [17.5745, 120.3871], // Latitude, Longitude
+          image: "banner.jpg",
+          location: "Vigan",
+          category: "Museum Tour",
+          hours: {
+              "Monday": "9:00 AM - 5:00 PM",
+              "Tuesday": "9:00 AM - 5:00 PM",
+              "Wednesday": "9:00 AM - 5:00 PM",
+              "Thursday": "9:00 AM - 5:00 PM",
+              "Friday": "9:00 AM - 5:00 PM",
+              "Saturday": "10:00 AM - 4:00 PM",
+              "Sunday": "Closed"
+          }
+      },
+      "Bell Tower": {
+          name: "Bell Tower",
+          description: "The Bantay Bell Tower, built in 1591, is one of the oldest surviving bell towers in the Philippines. Located in Bantay, Ilocos Sur, it stands on a hill offering panoramic views of the town and surrounding countryside. Originally used as a watchtower against pirates, it now serves as a historical landmark and tourist attraction.",
+          coordinates: [17.5823, 120.3880], // Latitude, Longitude
+          image: "banner.jpg",
+          location: "Bantay",
+          category: "Historical Landmark",
+          hours: {
+              "Monday": "8:00 AM - 6:00 PM",
+              "Tuesday": "8:00 AM - 6:00 PM",
+              "Wednesday": "8:00 AM - 6:00 PM",
+              "Thursday": "8:00 AM - 6:00 PM",
+              "Friday": "8:00 AM - 6:00 PM",
+              "Saturday": "8:00 AM - 6:00 PM",
+              "Sunday": "8:00 AM - 6:00 PM"
+          }
+      },
+      "Choco Surf Beach": {
+          name: "Choco Surf Beach",
+          description: "Choco Surf Beach in Caoayan is known for its chocolate-colored sand and good surfing conditions. The beach offers a relaxed atmosphere for visitors looking to enjoy water activities or simply unwind by the sea. It's a popular destination for both locals and tourists seeking a nature experience away from more crowded beaches.",
+          coordinates: [17.5420, 120.3670], // Latitude, Longitude
+          image: "banner.jpg",
+          location: "Caoayan",
+          category: "Nature Experience",
+          hours: {
+              "Monday": "6:00 AM - 6:00 PM",
+              "Tuesday": "6:00 AM - 6:00 PM",
+              "Wednesday": "6:00 AM - 6:00 PM",
+              "Thursday": "6:00 AM - 6:00 PM",
+              "Friday": "6:00 AM - 6:00 PM",
+              "Saturday": "6:00 AM - 6:00 PM",
+              "Sunday": "6:00 AM - 6:00 PM"
+          }
+      },
+      "Sta. Catalina Paris Church": {
+          name: "Sta. Catalina Paris Church",
+          description: "The Paris Church in Sta. Catalina is a beautiful example of Spanish colonial architecture. With its intricate baroque design and historical significance, the church represents an important part of the region's cultural heritage. Visitors can admire its ornate interior, religious artifacts, and peaceful surroundings.",
+          coordinates: [17.5510, 120.3950], // Latitude, Longitude
+          image: "banner.jpg",
+          location: "Sta. Catalina",
+          category: "Cultural Experience",
+          hours: {
+              "Monday": "7:00 AM - 7:00 PM",
+              "Tuesday": "7:00 AM - 7:00 PM",
+              "Wednesday": "7:00 AM - 7:00 PM",
+              "Thursday": "7:00 AM - 7:00 PM",
+              "Friday": "7:00 AM - 7:00 PM",
+              "Saturday": "7:00 AM - 7:00 PM",
+              "Sunday": "6:00 AM - 8:00 PM"
+          }
+      },
+      "St. Vincent Ferrer Paris Church": {
+          name: "St. Vincent Ferrer Paris Church",
+          description: "St. Vincent Ferrer Parish Church in San Vicente is a historical religious site featuring unique architectural elements that blend Spanish colonial and local influences. The church stands as a testament to the deep-rooted Catholic traditions in the region and continues to serve as an important cultural and spiritual center for the community.",
+          coordinates: [17.5630, 120.4120], // Latitude, Longitude
+          image: "banner.jpg",
+          location: "San Vicente",
+          category: "Cultural Experience",
+          hours: {
+              "Monday": "7:00 AM - 6:00 PM",
+              "Tuesday": "7:00 AM - 6:00 PM",
+              "Wednesday": "7:00 AM - 6:00 PM",
+              "Thursday": "7:00 AM - 6:00 PM",
+              "Friday": "7:00 AM - 6:00 PM",
+              "Saturday": "7:00 AM - 6:00 PM",
+              "Sunday": "6:00 AM - 7:00 PM"
+          }
+      },
+
+      "Calle Crisologo": {
+          name: "Calle Crisologo",
+          description: "Calle Crisologo is a historic street located in the heart of Vigan City, Ilocos Sur, Philippines. This cobblestone avenue is renowned for its well-preserved Spanish colonial architecture, offering visitors a glimpse into the Philippines' rich cultural heritage.​",
+          coordinates: [17.5630, 120.4120], // Latitude, Longitude
+          image: "banner.jpg",
+          location: "Vigan",
+          category: "Historical Landmark",
+          hours: {
+              "Monday": "24/7",
+              "Tuesday": "24/7",
+              "Wednesday": "24/7",
+              "Thursday": "24/7",
+              "Friday": "24/7",
+              "Saturday": "24/7",
+              "Sunday": "24/7"
+          }
+      }
+  };
+  
+  // Create popup container and add it to the document
+  const popupContainer = document.createElement('div');
+  popupContainer.classList.add('location-popup', 'fixed', 'inset-0', 'z-50', 'bg-white', 'overflow-auto', 'hidden');
+  document.body.appendChild(popupContainer);
+  
+  // Store original body overflow style
+  let originalBodyOverflow;
+  
+  // Initialize location cards click event
+  function initializeLocationCards() {
+      const locationCards = document.querySelectorAll('a[href="location.html"]');
+      
+      locationCards.forEach(card => {
+          card.addEventListener('click', function(e) {
+              e.preventDefault(); // Prevent navigation to location.html
+              
+              // Get location name from the card
+              const locationName = card.querySelector('h1').textContent.trim();
+              
+              // Get location data
+              const location = locationData[locationName];
+              
+              if (location) {
+                  showLocationPopup(location);
+              } else {
+                  console.error('Location data not found for:', locationName);
+              }
+          });
+      });
+  }
+  
+  // Function to disable background scrolling
+  function disableBackgroundScroll() {
+      // Store current scroll position and body overflow style
+      originalBodyOverflow = document.body.style.overflow;
+      
+      // Disable scrolling
+      document.body.style.overflow = 'hidden';
+  }
+  
+  // Function to enable background scrolling
+  function enableBackgroundScroll() {
+      // Restore original overflow style
+      document.body.style.overflow = originalBodyOverflow;
+  }
+  
+  // Function to toggle hours dropdown
+  function toggleHoursDropdown() {
+      const hoursContent = document.getElementById('hours-content');
+      const hoursIcon = document.getElementById('hours-icon');
+      
+      if (hoursContent.classList.contains('hidden')) {
+          // Show content
+          hoursContent.classList.remove('hidden');
+          // Rotate icon
+          hoursIcon.style.transform = 'rotate(180deg)';
+      } else {
+          // Hide content
+          hoursContent.classList.add('hidden');
+          // Reset icon
+          hoursIcon.style.transform = 'rotate(0deg)';
+      }
+  }
+  
+  // Function to show location popup
+  function showLocationPopup(location) {
+      // Disable background scrolling
+      disableBackgroundScroll();
+      
+      // Create hours HTML
+      let hoursHTML = '';
+      for (const [day, hours] of Object.entries(location.hours)) {
+          hoursHTML += `<div class="flex justify-between py-1">
+              <span class="font-medium">${day}:</span>
+              <span>${hours}</span>
+          </div>`;
+      }
+      
+      // Get other locations for recommendations (exclude current one)
+      const otherLocations = Object.values(locationData).filter(item => item.name !== location.name);
+      
+      // Get 3 random locations if there are more than 3 other locations
+      let recommendedLocations = otherLocations;
+      if (otherLocations.length > 3) {
+          recommendedLocations = getRandomItems(otherLocations, 3);
+      }
+      
+      // Create recommendations HTML
+      let recommendationsHTML = '';
+      recommendedLocations.forEach(recommendedLocation => {
+          recommendationsHTML += `
+          <div class="location-card" data-location="${recommendedLocation.name}">
+              <div class="w-full md:w-[280px] border rounded-lg overflow-hidden hover:shadow-md cursor-pointer transition-all duration-200 hover:scale-[1.02]">
+                  <div class="h-[150px] overflow-hidden">
+                      <img src="${recommendedLocation.image}" alt="${recommendedLocation.name}" class="w-full h-full object-cover">
+                  </div>
+                  <div class="p-4">
+                      <h3 class="text-lg font-medium mb-2">${recommendedLocation.name}</h3>
+                      <div class="flex items-center justify-between">
+                          <div class="flex items-center text-[#5F7281]">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                  <path fill="#5F7281" d="M12 11.5A2.5 2.5 0 0 1 9.5 9A2.5 2.5 0 0 1 12 6.5A2.5 2.5 0 0 1 14.5 9a2.5 2.5 0 0 1-2.5 2.5M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7" />
+                              </svg>
+                              <p class="text-sm ml-1">${recommendedLocation.location}</p>
+                          </div>
+                          <div>
+                              <p class="bg-[#2986FE] text-white text-xs px-2 py-1 rounded-full">${recommendedLocation.category}</p>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          `;
+      });
+      
+      // Populate popup content
+      popupContainer.innerHTML = `
+          <div class="relative w-full h-full flex flex-col">
+              <!-- Close button -->
+              <button id="close-popup" class="absolute top-4 right-4 z-10 bg-white rounded-full p-2 shadow-md">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+              </button>
+              
+              <!-- Image section -->
+              <div class="w-full h-[40vh] md:h-[50vh] relative">
+                  <img src="${location.image}" alt="${location.name}" class="w-full h-full object-cover">
+              </div>
+              
+              <!-- Content section -->
+              <div class="flex flex-col md:flex-row w-full py-6 px-4 md:px-8">
+                  <!-- Location info -->
+                  <div class="w-full md:w-1/2 pr-0 md:pr-8 mb-8 md:mb-0">
+                      <h1 class="text-2xl md:text-3xl font-bold mb-4">${location.name}</h1>
+                      <div class="flex items-center mb-4">
+                          <div class="flex items-center text-[#5F7281] mr-4">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                  <path fill="#5F7281" d="M12 11.5A2.5 2.5 0 0 1 9.5 9A2.5 2.5 0 0 1 12 6.5A2.5 2.5 0 0 1 14.5 9a2.5 2.5 0 0 1-2.5 2.5M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7" />
+                              </svg>
+                              <p class="ml-1">${location.location}</p>
+                          </div>
+                          <div>
+                              <p class="bg-[#2986FE] text-white text-xs px-2 py-1 rounded-full">${location.category}</p>
+                          </div>
+                      </div>
+                      <p class="text-gray-700 mb-6">${location.description}</p>
+                      
+                      <!-- Opening Hours Dropdown -->
+                      <div class="border rounded-lg mb-6">
+                          <button id="hours-dropdown-btn" class="w-full flex items-center justify-between p-4 text-left">
+                              <span class="font-semibold">Opening Hours</span>
+                              <svg id="hours-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform duration-300">
+                                  <polyline points="6 9 12 15 18 9"></polyline>
+                              </svg>
+                          </button>
+                          
+                          <div id="hours-content" class="hidden p-4 pt-0 border-t">
+                              ${hoursHTML}
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <!-- Map -->
+                  <div class="w-full md:w-1/2 h-[300px] md:h-[400px]">
+                      <div id="location-map" class="w-full h-full rounded-lg shadow-md"></div>
+                  </div>
+              </div>
+              
+              <!-- Other Attractions Section -->
+              <div class="w-full py-6 px-4 md:px-8 border-t">
+                  <h2 class="text-xl md:text-2xl font-bold mb-6">Other Attractions You Might Like</h2>
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      ${recommendationsHTML}
+                  </div>
+              </div>
+          </div>
+      `;
+      
+      // Show popup
+      popupContainer.classList.remove('hidden');
+      
+      // Initialize map after popup is visible
+      setTimeout(() => {
+          initializeMap(location);
+      }, 100);
+      
+      // Add event listeners
+      document.getElementById('close-popup').addEventListener('click', closeLocationPopup);
+      document.getElementById('hours-dropdown-btn').addEventListener('click', toggleHoursDropdown);
+      
+      // Add event listeners to recommendation cards
+      const recommendationCards = document.querySelectorAll('.location-card');
+      recommendationCards.forEach(card => {
+          card.addEventListener('click', function() {
+              const locationName = this.dataset.location;
+              const selectedLocation = locationData[locationName];
+              
+              if (selectedLocation) {
+                  // Close current popup and open new one
+                  closeLocationPopup();
+                  setTimeout(() => {
+                      showLocationPopup(selectedLocation);
+                  }, 100);
+              }
+          });
+      });
+      
+      // Add escape key event listener
+      document.addEventListener('keydown', handleEscKeyPress);
+  }
+  
+  // Function to get random items from array
+  function getRandomItems(array, count) {
+      const shuffled = [...array].sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, count);
+  }
+  
+  // Function to close location popup
+  function closeLocationPopup() {
+      popupContainer.classList.add('hidden');
+      document.removeEventListener('keydown', handleEscKeyPress);
+      
+      // Re-enable background scrolling
+      enableBackgroundScroll();
+  }
+  
+  // Function to handle escape key press
+  function handleEscKeyPress(e) {
+      if (e.key === 'Escape') {
+          closeLocationPopup();
+      }
+  }
+  
+  // Function to initialize Leaflet map
+  function initializeMap(location) {
+      // Check if Leaflet is available
+      if (typeof L !== 'undefined') {
+          // Create map
+          const map = L.map('location-map').setView(location.coordinates, 15);
+          
+          // Add tile layer (OpenStreetMap)
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+              attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          }).addTo(map);
+          
+          // Add marker
+          L.marker(location.coordinates)
+              .addTo(map)
+              .bindPopup(`<b>${location.name}</b>`)
+              .openPopup();
+      } else {
+          console.error('Leaflet is not loaded. Please include Leaflet CSS and JS in your HTML.');
+          document.getElementById('location-map').innerHTML = `
+              <div class="w-full h-full flex items-center justify-center bg-gray-100 rounded-lg">
+                  <p class="text-gray-500">Map could not be loaded. Please ensure Leaflet is included.</p>
+              </div>
+          `;
+      }
+  }
+  
+  // Initialize when DOM is loaded
+  document.addEventListener('DOMContentLoaded', initializeLocationCards);
+      </script>
+
+</body>
+</html>

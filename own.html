@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vigenture</title>
+    <!-- Font imports -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Mulish:ital,wght@0,200..1000;1,200..1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Public+Sans:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Leaflet Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""></script>
+    
+    <!-- JSPDF Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    screens: {
+                        'sm': '300px',  // (phones)
+                        'md': '768px',  // (tablets)
+                        'lg': '1025px', // (laptops/desktops)
+                        'xl': '1280px', // Extra large devices
+                        '2xl': '1536px' // Extra extra large screens
+                    },
+                },
+            },
+        }
+    </script>
+
+    <style>
+        /* Map container styling */
+        #map { 
+            height: 500px; 
+            z-index: 0;
+        }
+        
+        /* Location item styling */
+        .location-item img { 
+            width: 80px; 
+            height: 80px; 
+            object-fit: cover; 
+            margin-right: 1rem; 
+        }
+        
+        /* Tab styling */
+        .tab-button { 
+            cursor: pointer; 
+            padding: 10px 20px; 
+            margin-right: 5px;  
+        }
+        
+        .active-tab { 
+            border-bottom: 2px solid black; 
+            font-weight: 600;
+        }
+        
+        /* Day content display */
+        .day-content { 
+            display: none; 
+        }
+        
+        .day-content.active { 
+            display: block; 
+        }
+        
+        /* Arrow animation */
+        .arrowDown {
+            transition: transform 0.3s ease;
+        }
+        
+        .rotate-180 {
+            transform: rotate(180deg);
+        }
+        
+        /* Summary page styling */
+        .location-item {
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        
+        .location-item h4 {
+            font-weight: bold;
+        }
+        
+        /* Section visibility */
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body class="bg-[#fafafa] text-[#0e1111] font-[Roboto] scroll-smooth">
+    <!-- DAY SELECTION SECTION -->
+    <section id="daySelection" class="section active 2xl:w-[65%] m-auto mt-[128px] h-80 mb-96">
+        <!-- progress line -->
+        <div class="border-t border-[#E4E7EC] w-[350px] md:w-[500px] m-auto relative">
+            <span class="border-[#0e1111] border absolute w-[350px] md:w-[500px] -top-[1px] -left-[1px]"></span>
+            <p class="text-[12px] md:text-[14px] text-[#344054] text-center mt-10 mb-10">1 of 1</p>
+        </div>
+
+        <!-- content -->
+        <div>
+            <div class="text-center">
+                <h1 class="text-[28px] md:text-[38px] font-medium">How long do you plan to stay?</h1>
+                <p class="text-[16px] md:text-[18px] mt-0.5 text-[#344054]">Tell us how long you want to enjoy Metro Vigan.</p>
+            </div>
+
+            <div class="text-center mt-16">
+                <p class="text-[12px] md:text-[14px] text-[#344054] mb-0.5">Select your stay duration: 1 to 7 days.</p>
+                <input type="number" id="dayCount" placeholder="Enter trip duration" min="1" max="7" required
+                    class="border-[#E4E7EC] border w-[300px] p-2 px-4 text-[16px] md:text-[18px] rounded-[10px] bg-white font-normal focus:outline-none focus:ring-2 focus:ring-[#366FD7] duration-300 ease-in-out">
+
+                <div class="mt-48 w-[90%] m-auto text-end">
+                    <input onclick="saveDays()" type="submit" value="Submit" id="submit" 
+                        class="bg-[#366FD7] px-5 py-1.5 rounded-[99px] text-[#fafafa] font-medium text-[16px] md:text-[18px] cursor-pointer hover:bg-[#2056BB] duration-300 ease-in-out">    
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ITINERARY CREATION SECTION -->
+    <section id="createItinerary" class="section">
+        <div class="container mx-auto px-4 md:px-14 py-8 mt-20 2xl">
+            <h2 class="text-[28px] md:text-[38px] font-medium mb-14">Create Your Own Itinerary</h2>
+            
+            <!-- Tabs for Days -->
+            <div id="dayTabs" class="flex mb-10 border-b-2 w-fit"></div>
+        
+            <div class="flex justify-between">
+                <!-- List days and locations -->
+                <div id="dayContent" class="w-[65%] h-full"></div>
+            
+                <!-- Map -->
+                <div id="map" class="my-8 w-[30%] rounded-lg h-full"></div>
+            </div>
+        
+            <!-- Save Button -->
+            <button id="saveButton" class="mt-4 bg-[#366FD7] text-[#fafafa] py-1.5 px-6 rounded-[99px]" onclick="saveItinerary()">Save</button>
+            
+            <!-- Modal for selecting locations -->
+            <div class="modal fixed inset-0 bg-gray-500 bg-opacity-50 hidden flex items-start justify-end z-50" id="locationModal">
+                <div class="bg-white rounded-lg shadow-lg w-[40%] h-full overflow-auto p-4 relative">
+                    <div class="w-full flex justify-end pr-2">
+                        <button onclick="closeModal()" class="text-[25px] hover:rotate-90 duration-300 ease-in-out hover:text-[#8B2635]">
+                            &times;
+                        </button>
+                    </div>
+            
+                    <div class="mb-14 px-8">
+                        <h1 class="text-[28px] md:text-[38px] font-semibold">Add attractions to visit</h1>
+                        <p class="text-[16px] md:text-[18px] text-[#344054] font-medium mb-4">Search and add new ones to your own trip.</p>
+                        <hr>
+                    </div>
+            
+                    <div class="text-center">
+                        <input type="text" id="searchInput" class="w-[90%] p-2 border border-gray-300 rounded-md mb-4" placeholder="Search location">
+                    </div>
+            
+                    <div class="text-center">
+                        <!-- Filter -->
+                        <select id="municipalityFilter" class="w-[90%] p-2 border border-gray-300 rounded-md mb-4">
+                            <option value="All">All</option>
+                            <option value="Vigan">Vigan</option>
+                            <option value="Bantay">Bantay</option>
+                            <option value="San Vicente">San Vicente</option>
+                            <option value="Santa Catalina">Santa Catalina</option>
+                            <option value="Caoayan">Caoayan</option>
+                        </select>
+                    </div>
+            
+                    <!-- locations list -->
+                    <div id="locationList" class="space-y-2 w-[90%] m-auto"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SUMMARY SECTION -->
+    <section id="summarizeItinerary" class="section">
+        <div class="container mx-auto px-4">
+            <button onclick="goBack()" id="backBtn" class="mt-6 inline-block text-black underline mb-20 py-2 px-4 rounded-md">Go back</button>
+            <h2 class="text-[28px] md:text-[38px] font-medium mb-6">Itinerary Summary</h2>
+
+            <div id="itinerarySummary"></div>
+            
+            <!-- Buttons -->
+            <div class="mt-6">
+                <button id="printBtn" class="bg-green-500 text-white py-2 px-4 rounded-md mr-4">Print Itinerary</button>
+                <button id="downloadBtn" class="bg-[#336fd7] text-white py-2 px-4 rounded-md">Download as PDF</button>
+            </div>
+            
+            <div id="summaryContainer" class="p-6 mt-8"></div>
+        </div>
+    </section>
+
+    <script>
+        // Global variables
+        let currentSection = "daySelection";
+        let currentDay = 0;
+        let dayCount = 0;
+        let markers = [];
+        let itineraryData = [];
+        
+        // Array of locations data
+        const locations = [
+            { name: "Calle Crisologo", coords: [17.577, 120.387], municipality: "Vigan", type: "Historic Landmark", image: "defaultPFP.png" },
+            { name: "Bantay Bell Tower", coords: [17.574, 120.386], municipality: "Bantay", type: "Cultural Experience", image: "defaultPFP.png" },
+            { name: "San Vicente Church", coords: [17.5745, 120.3875], municipality: "San Vicente", type: "Nature Experience", image: "defaultPFP.png" },
+            { name: "Sta. Catalina Beach", coords: [17.5748, 120.3873], municipality: "Santa Catalina", type: "Cultural Experience", image: "defaultPFP.png" },
+            { name: "San Ildefonso Church", coords: [17.5755, 120.3877], municipality: "San Ildefonso", type: "Museum Tour", image: "defaultPFP.png" },
+            { name: "Choco Surf", coords: [17.5762, 120.388], municipality: "Caoayan", type: "Historic Landmark", image: "defaultPFP.png" },
+        ];
+        
+        // Switch between sections
+        function switchSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show the requested section
+            document.getElementById(sectionId).classList.add('active');
+            currentSection = sectionId;
+            
+            // Initialize map if switching to create itinerary section
+            if (sectionId === 'createItinerary' && !window.mapInitialized) {
+                initializeMap();
+                window.mapInitialized = true;
+            }
+        }
+        
+        // Save number of days and proceed to itinerary creation
+        function saveDays() {
+            const dayCountInput = document.getElementById("dayCount");
+            dayCount = parseInt(dayCountInput.value);
+            
+            if (dayCount >= 1 && dayCount <= 7) {
+                // Initialize itinerary data array based on day count
+                itineraryData = Array.from({ length: dayCount }, () => []);
+                
+                // Switch to itinerary creation section
+                switchSection('createItinerary');
+                
+                // Initialize the itinerary creation interface
+                initializeItineraryCreation();
+            } else {
+                alert("Please enter a valid number between 1 and 7.");
+            }
+        }
+        
+        // Initialize map
+        function initializeMap() {
+            window.map = L.map('map').setView([17.574975, 120.387], 14);
+            
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 12,
+                attribution: '&copy; OpenStreetMap'
+            }).addTo(window.map);
+        }
+        
+        // Initialize itinerary creation interface
+        function initializeItineraryCreation() {
+            const dayTabs = document.getElementById("dayTabs");
+            const dayContent = document.getElementById("dayContent");
+            
+            // Clear previous content
+            dayTabs.innerHTML = '';
+            dayContent.innerHTML = '';
+            
+            // Create tab buttons and day content containers
+            for (let i = 0; i < dayCount; i++) {
+                const tabButton = document.createElement("button");
+                tabButton.classList.add("tab-button", "text-[#0e1111]");
+                tabButton.textContent = `Day ${i + 1}`;
+                tabButton.onclick = () => switchDay(i);
+                
+                const dayDiv = document.createElement("div");
+                dayDiv.classList.add("day-content");
+                dayDiv.innerHTML = `
+                    <h3 class="font-medium text-[24px] md:text-[28px] mb-2">Day ${i + 1}</h3>
+                    <p class="text-[16px] md:text-[18px] mb-12 text-[#344054]">Locations Count: <span class="count text-[#366FD7]">0</span></p>
+                    <ul class="space-y-2 location-list"></ul>
+                    <button class="mt-2 bg-[#0e1111] text-[#fafafa] py-2 px-4 rounded-[99px]" onclick="openModal(${i})">Add Location</button>
+                `;
+                
+                dayContent.appendChild(dayDiv);
+                dayTabs.appendChild(tabButton);
+            }
+            
+            // Show the first day by default
+            switchDay(0); 
+        }
+        
+        // Function to switch between days
+        function switchDay(dayIndex) {
+            const allDays = document.querySelectorAll(".day-content");
+            allDays.forEach((day) => {
+                day.classList.remove("active");
+            });
+            
+            allDays[dayIndex].classList.add("active");
+            
+            const allTabs = document.querySelectorAll(".tab-button");
+            allTabs.forEach((tab) => {
+                tab.classList.remove("active-tab");
+            });
+            allTabs[dayIndex].classList.add("active-tab");
+            
+            currentDay = dayIndex;
+        }
+        
+        // Open modal to select locations
+        function openModal(dayIndex) {
+            document.getElementById("locationModal").classList.remove("hidden");
+            currentDay = dayIndex;
+            renderLocations();
+        }
+        
+        // Close location selection modal
+        function closeModal() {
+            document.getElementById("locationModal").classList.add("hidden");
+        }
+        
+        // Render available locations based on search and filter
+        function renderLocations() {
+            const search = document.getElementById("searchInput").value.toLowerCase();
+            const filter = document.getElementById("municipalityFilter").value;
+            const list = document.getElementById("locationList");
+            list.innerHTML = "";
+            
+            locations.forEach((loc, idx) => {
+                if ((filter === "All" || loc.municipality === filter) && loc.name.toLowerCase().includes(search)) {
+                    const div = document.createElement("div");
+                    div.classList.add("location-item", "flex", "justify-between", "items-center", "p-2", "border", "rounded-lg", "border-gray-300");
+                    div.innerHTML = `
+                        <div class="flex items-center w-full">
+                            <img src="${loc.image}" alt="${loc.name}" class="mr-4 rounded-lg">
+                            <div class="h-full mb-5">
+                                <div class="font-semibold">${loc.name}</div>
+                                <div class="flex">
+                                    <div class="text-sm mr-2 bg-[#337FD7] px-1.5 text-[#fafafa] py-0.5 rounded-tl-lg rounded-br-lg">${loc.municipality}</div>
+                                    <div class="text-sm bg-[#E4E7EC] px-1.5 text-[#0e1111] py-0.5 rounded-tl-lg rounded-br-lg">${loc.type}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="hover:rotate-90 duration-300 ease-in-out hover:scale-110" onclick="addToDay(${idx})">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                <path fill="#336fd7" fill-rule="evenodd" d="M7.345 4.017a42.3 42.3 0 0 1 9.31 0c1.713.192 3.095 1.541 3.296 3.26a40.7 40.7 0 0 1 0 9.446c-.201 1.719-1.583 3.068-3.296 3.26a42.3 42.3 0 0 1-9.31 0c-1.713-.192-3.095-1.541-3.296-3.26a40.7 40.7 0 0 1 0-9.445a3.734 3.734 0 0 1 3.295-3.26M12 7.007a.75.75 0 0 1 .75.75v3.493h3.493a.75.75 0 1 1 0 1.5H12.75v3.493a.75.75 0 0 1-1.5 0V12.75H7.757a.75.75 0 0 1 0-1.5h3.493V7.757a.75.75 0 0 1 .75-.75" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    `;
+                    list.appendChild(div);
+                }
+            });
+        }
+        
+        // Add location to the current day's itinerary
+        function addToDay(locationIndex) {
+            const location = locations[locationIndex];
+            
+            // Add marker to map and bind popup
+            const marker = L.marker(location.coords).addTo(window.map).bindPopup(location.name);
+            
+            // Store the marker with the location object
+            const locationWithMarker = {
+                ...location,
+                marker: marker
+            };
+            
+            itineraryData[currentDay].push(locationWithMarker);
+            
+            renderLocationList();
+        }
+        
+   // Function to render the current day's location list with specified time schedule
+function renderLocationList() {
+    const daySection = document.querySelectorAll(".day-content")[currentDay];
+    const list = daySection.querySelector(".location-list");
+    list.innerHTML = ""; 
+    
+    // Initialize schedule times based on the provided format
+    const timeSchedule = [
+        { start: "08:00", end: "10:00", label: "8-10", type: "activity" },
+        { start: "10:00", end: "12:00", label: "10-12", type: "activity" },
+        { start: "12:00", end: "13:00", label: "12-1 lunch", type: "break", emoji: "🍽️", bgColor: "bg-yellow-100" },
+        { start: "13:00", end: "15:00", label: "1-3", type: "activity" },
+        { start: "15:00", end: "16:00", label: "3-4:00 break/snack", type: "break", emoji: "☕", bgColor: "bg-green-100" },
+        { start: "16:00", end: "18:00", label: "4:00-6:00", type: "activity" },
+        { start: "18:00", end: "19:00", label: "6-7 souvenir buying time or exploration/sunset", type: "free", emoji: "🛍️", bgColor: "bg-purple-100" },
+        { start: "19:00", end: "20:00", label: "7-8 dinner", type: "break", emoji: "🍽️", bgColor: "bg-blue-100" },
+        { start: "20:00", end: "21:00", label: "8 dancing fountain (optional)", type: "optional", emoji: "✨", bgColor: "bg-gray-100" }
+    ];
+    
+    // Create a structured timeline with all elements (breaks, activities, etc.)
+    const timeline = [...timeSchedule]; // Create a copy of the schedule
+    
+    // Map user-added locations to available activity slots
+    const activitySlots = timeline.filter(slot => slot.type === "activity");
+    
+    // Add locations to activity slots
+    itineraryData[currentDay].forEach((loc, idx) => {
+        if (idx < activitySlots.length) {
+            // Store the location in the activity slot
+            activitySlots[idx].location = loc;
+        }
+    });
+    
+    // Render the timeline in order
+    timeline.forEach(slot => {
+        const item = document.createElement("li");
+        
+        if (slot.type === "activity" && slot.location) {
+            // Render a location
+            const timeLabel = `${slot.start} - ${slot.end}`;
+            
+            item.className = "bg-white border border-gray-200 p-3 rounded flex justify-between items-start";
+            item.innerHTML = `
+                <div>
+                    <strong>${slot.location.name}</strong> <span class="text-sm text-gray-500">(${timeLabel})</span><br>
+                    <span class="text-sm">${slot.location.municipality} • ${slot.location.type}</span>
+                </div>
+            `;
+            
+            // Remove button
+            const removeBtn = document.createElement("button");
+            removeBtn.textContent = "Remove";
+            removeBtn.className = "ml-4 text-red-600 hover:underline text-sm";
+            removeBtn.onclick = (e) => {
+                e.stopPropagation(); // Prevent event bubbling
+                
+                // Find the index of this location in the itineraryData
+                const locationIndex = itineraryData[currentDay].findIndex(l => 
+                    l.name === slot.location.name && 
+                    l.coords[0] === slot.location.coords[0] && 
+                    l.coords[1] === slot.location.coords[1]
+                );
+                
+                if (locationIndex !== -1) {
+                    // Remove marker from map
+                    itineraryData[currentDay][locationIndex].marker.remove();
+                    
+                    // Remove from itineraryData
+                    itineraryData[currentDay].splice(locationIndex, 1);
+                    
+                    // Re-render the list
+                    renderLocationList();
+                }
+            };
+            
+            item.appendChild(removeBtn);
+            
+        } else if (slot.type === "break" || slot.type === "free" || slot.type === "optional") {
+            // Render a break, free time or optional activity
+            const label = slot.label.charAt(0).toUpperCase() + slot.label.slice(1);
+            
+            item.innerHTML = `<div class="${slot.bgColor} p-3 rounded">
+                ${slot.emoji} ${label} - ${slot.start} to ${slot.end}
+            </div>`;
+            
+        } else if (slot.type === "activity") {
+            // Empty activity slot
+            item.innerHTML = `<div class="bg-gray-50 p-3 rounded text-gray-400 border border-dashed border-gray-300">
+                <span class="text-sm">Empty slot (${slot.start} - ${slot.end})</span>
+            </div>`;
+        }
+        
+        list.appendChild(item);
+    });
+    
+    // Update count
+    daySection.querySelector(".count").textContent = itineraryData[currentDay].length;
+}
+
+// Save the itinerary and proceed to summary view
+function saveItinerary() {
+    // Use the same schedule structure as in renderLocationList for consistency
+    const timeSchedule = [
+        { start: "08:00", end: "10:00", label: "Morning Activity", type: "activity" },
+        { start: "10:00", end: "12:00", label: "Late Morning Activity", type: "activity" },
+        { start: "12:00", end: "13:00", label: "Lunch Break", type: "break" },
+        { start: "13:00", end: "15:00", label: "Early Afternoon Activity", type: "activity" },
+        { start: "15:00", end: "16:00", label: "Afternoon Break/Snack", type: "break" },
+        { start: "16:00", end: "18:00", label: "Late Afternoon Activity", type: "activity" },
+        { start: "18:00", end: "19:00", label: "Souvenir Shopping/Exploration", type: "free" },
+        { start: "19:00", end: "20:00", label: "Dinner Time", type: "break" },
+        { start: "20:00", end: "21:00", label: "Dancing Fountain Show (Optional)", type: "optional" }
+    ];
+    
+    const itineraryWithTime = itineraryData.map((day, dayIndex) => {
+        // Create a copy of the time schedule for this day
+        const daySchedule = [...timeSchedule];
+        
+        // Get all activity slots
+        const activitySlots = daySchedule.filter(slot => slot.type === "activity");
+        
+        // Assign locations to activity slots
+        day.forEach((location, idx) => {
+            if (idx < activitySlots.length) {
+                activitySlots[idx].location = location;
+            }
+        });
+        
+        // Convert the schedule to the format expected by renderSummary
+        const dayPlan = daySchedule.map(slot => {
+            if (slot.type === "activity" && slot.location) {
+                // A location activity
+                return {
+                    name: slot.location.name,
+                    timeStart: slot.start,
+                    timeEnd: slot.end,
+                    type: slot.location.type,
+                    municipality: slot.location.municipality
+                };
+            } else if (slot.type === "break") {
+                // A break activity
+                return {
+                    name: slot.label,
+                    timeStart: slot.start,
+                    timeEnd: slot.end,
+                    type: "Break",
+                    municipality: ""
+                };
+            } else if (slot.type === "free") {
+                // Free time
+                return {
+                    name: "Free Time: " + slot.label,
+                    timeStart: slot.start,
+                    timeEnd: slot.end,
+                    type: "Free Time",
+                    municipality: ""
+                };
+            } else if (slot.type === "optional") {
+                // Optional activity
+                return {
+                    name: "Optional: " + slot.label,
+                    timeStart: slot.start,
+                    timeEnd: slot.end,
+                    type: "Optional",
+                    municipality: ""
+                };
+            } else {
+                // Empty activity slot - include as placeholder
+                return {
+                    name: "Free Time",
+                    timeStart: slot.start,
+                    timeEnd: slot.end,
+                    type: "Empty Slot",
+                    municipality: ""
+                };
+            }
+        });
+        
+        return {
+            day: `Day ${dayIndex + 1}`,
+            activities: dayPlan
+        };
+    });
+    
+    // Store the itinerary in memory and display the summary section
+    window.savedItinerary = itineraryWithTime;
+    switchSection('summarizeItinerary');
+    renderSummary();
+}
+
+    </script>
+</body>
+</html>
